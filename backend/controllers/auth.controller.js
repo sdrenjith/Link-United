@@ -1,40 +1,64 @@
-const pool = require("../config/db");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const login = async (req, res) => {
-  const { email, password } = req.body;
+const pool = require("../config/db");
+const env = require("../config/env");
+const asyncHandler = require("../utils/async-handler");
 
-  try {
-    const result = await pool.query(
-      "SELECT * FROM users WHERE email = $1",
-      [email]
-    );
-
-    // 1. check user exists
-    if (result.rows.length === 0) {
-      return res.status(400).json({ message: "User not found" });
-    }
-
-    const user = result.rows[0];
-
-    
-    // 2. check password (plain for now)
-    if (user.password !== password) {
-     console.log(user);
-      return res.status(400).json({ message: "Invalid credentials" + user + " " + password});
-    }
-
-    // 3. success
-    const token = jwt.sign({id: user.id, email: user.email, role: user.role}, "secretKey", { expiresIn: "1h" });
-
-    res.json({
-      message: "Login successful",
-      token: token,
-    });
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
+const isPasswordValid = async (plainPassword, storedPassword) => {
+  // Backward compatibility for any legacy plain-text records.
+  if (plainPassword === storedPassword) {
+    return true;
   }
+  return bcrypt.compare(plainPassword, storedPassword);
 };
 
-module.exports = { login };
+const login = asyncHandler(async (req, res) => {
+  const { email, password } = req.validated.body;
+
+  const query = "SELECT * FROM users WHERE email = $1 LIMIT 1";
+  const result = await pool.query(query, [email.toLowerCase()]);
+  const user = result.rows[0];
+  const fullName = user?.full_name || user?.name || "Administrator";
+  const role = user?.role || "admin";
+
+  if (!user || !(await isPasswordValid(password, user.password))) {
+    return res.status(401).json({ message: "Invalid credentials." });
+  }
+
+  const token = jwt.sign(
+    { sub: user.id, email: user.email, role, fullName },
+    env.jwtSecret,
+    { expiresIn: env.jwtExpiresIn },
+  );
+
+  return res.status(200).json({
+    message: "Login successful.",
+    token,
+    user: {
+      id: user.id,
+      email: user.email,
+      fullName,
+      role,
+    },
+  });
+});
+
+const me = asyncHandler(async (req, res) => {
+  const result = await pool.query("SELECT * FROM users WHERE id = $1 LIMIT 1", [req.user.sub]);
+  const user = result.rows[0];
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
+  return res.status(200).json({
+    user: {
+      id: user.id,
+      email: user.email,
+      fullName: user.full_name || user.name || "Administrator",
+      role: user.role || "admin",
+    },
+  });
+});
+
+module.exports = { login, me };

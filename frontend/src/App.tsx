@@ -1,32 +1,51 @@
 import { Routes, Route } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
+import About from "./pages/About";
 import Services from "./pages/Services";
 import Products from "./pages/Products";
-import Media from "./pages/Media";
-import Contact from "./pages/Contact";
 import GeneralProducts from "./pages/products/GeneralProducts";
 import AgroCommodities from "./pages/products/AgroCommodities";
 import VehiclesMachinery from "./pages/products/VehiclesMachinery";
 import WoodProducts from "./pages/products/WoodProducts";
+import KidsClothing from "./pages/products/KidsClothing";
+import Media from "./pages/Media";
+import Contact from "./pages/Contact";
 import Login from "./pages/admin/Login";
 import Dashboard from "./pages/admin/Dashboard";
+import DashboardHome from "./pages/admin/DashboardHome";
+import ProductsManager from "./pages/admin/ProductsManager";
+import MediaManager from "./pages/admin/MediaManager";
+import EnquiriesPage from "./pages/admin/EnquiriesPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <Routes>
       <Route path="/admin/login" element={<Login />} />
-      <Route path="/admin/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+      <Route
+        path="/admin/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<DashboardHome />} />
+        <Route path="products" element={<ProductsManager />} />
+        <Route path="media" element={<MediaManager />} />
+        <Route path="enquiries" element={<EnquiriesPage />} />
+      </Route>
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
         <Route path="/services" element={<Services />} />
-        <Route path="/products" element={<Products />}>
-          <Route path="general" element={<GeneralProducts />} />
-          <Route path="agro" element={<AgroCommodities />} />
-          <Route path="vehicles" element={<VehiclesMachinery />} />
-          <Route path="wood" element={<WoodProducts />} />
-        </Route>
+        <Route path="/products" element={<Products />} />
+        <Route path="/products/general" element={<GeneralProducts />} />
+        <Route path="/products/agro-commodities" element={<AgroCommodities />} />
+        <Route path="/products/vehicles-machinery" element={<VehiclesMachinery />} />
+        <Route path="/products/woods-wood-products" element={<WoodProducts />} />
+        <Route path="/products/kids-clothing" element={<KidsClothing />} />
         <Route path="/media" element={<Media />} />
         <Route path="/contact" element={<Contact />} />
       </Route>

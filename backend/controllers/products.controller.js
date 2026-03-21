@@ -1,76 +1,134 @@
 const pool = require("../config/db");
+const asyncHandler = require("../utils/async-handler");
 
-const getProducts = async (req, res) => {
-    try {
-        const response = await pool.query("SELECT * from products");
-        res.json(response.rows);
-    } catch (e) {
-        console.log(e);
-        res.status(500).json({ message: "No products found" });
-
-    }
-}
-
-const createProducts = async (req, res) => {
-    const {name, category, description , price} = req.body;
-    try {
-        const result = await pool.query("INSERT INTO products (name, category, description , price) values ($1, $2, $3, $4) RETURNING *",
-            [name, category, description , price]
-        );
-
-        res.json({
-            message: "Product Created",
-            product: result.rows[0],
-        }
-        )
-    } catch (e) {
-        console.log(error);
-        res.status(500).json({message: "server error"});
-    }
-};
-
-const updateProducts = async (req,res) => {
-    const {id} = req.params;
-    const {name , category , description, price} = req.body;
-    try{
-        const response = await pool.query("UPDATE products SET name=$1, category=$2, description=$3, price= $4 where id=$5 RETURNING *",
-            [name, category , description , price , id]
-            )
-
-            if(response.rows.length === 0){
-                return res.status(404).json({message:"product not found"});
-            }
-
-            res.json({
-                message: "product updated",
-                product: response.rows[0],
-            })
-
-    }catch (e){
-        console.log(e);
-        res.status(500).json({message: "server error"});
-    }
-}
-
-const deleteProducts = async (req,res) => {
-    const {id} = req.params;
-    try {
-const response = await pool.query("DELETE from products where id=$1 RETURNING *",
-    [id]
-);
-if(response.rows.length === 0) {
-    res.status(404).json({message:"product not found"});
-
-
-}
-res.status(200).json({
-    message: "product deleted",
-    product: response.rows[0],
+const mapProduct = (row) => ({
+  id: row.id,
+  name: row.name,
+  category: row.category,
+  shortDescription: row.short_description,
+  description: row.description,
+  price: Number(row.price),
+  unit: row.unit,
+  imageUrl: row.image_url,
+  isFeatured: row.is_featured,
+  createdAt: row.created_at,
+  updatedAt: row.updated_at,
 });
-    }catch(e){
-        console.log(e);
-        res.status(500).json({message:"server error"});
-    }
-}
 
-module.exports = { getProducts, createProducts, updateProducts, deleteProducts }; 
+const getProducts = asyncHandler(async (req, res) => {
+  const { category } = req.query;
+  const params = [];
+  let query = "SELECT * FROM products";
+
+  if (category) {
+    params.push(category);
+    query += " WHERE category = $1";
+  }
+
+  query += " ORDER BY created_at DESC";
+  const response = await pool.query(query, params);
+  res.status(200).json({ items: response.rows.map(mapProduct) });
+});
+
+const getProductById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const response = await pool.query("SELECT * FROM products WHERE id = $1", [id]);
+
+  if (!response.rows.length) {
+    return res.status(404).json({ message: "Product not found." });
+  }
+
+  return res.status(200).json({ item: mapProduct(response.rows[0]) });
+});
+
+const createProduct = asyncHandler(async (req, res) => {
+  const { name, category, shortDescription, description, price, unit, imageUrl, isFeatured } =
+    req.validated.body;
+
+  const query = `
+    INSERT INTO products
+      (name, category, short_description, description, price, unit, image_url, is_featured)
+    VALUES
+      ($1, $2, $3, $4, $5, $6, $7, $8)
+    RETURNING *
+  `;
+
+  const result = await pool.query(query, [
+    name,
+    category,
+    shortDescription,
+    description,
+    price,
+    unit,
+    imageUrl,
+    isFeatured,
+  ]);
+
+  return res.status(201).json({
+    message: "Product created successfully.",
+    item: mapProduct(result.rows[0]),
+  });
+});
+
+const updateProduct = asyncHandler(async (req, res) => {
+  const { id } = req.validated.params;
+  const payload = req.validated.body;
+
+  const fields = [];
+  const values = [];
+  const keyMap = {
+    name: "name",
+    category: "category",
+    shortDescription: "short_description",
+    description: "description",
+    price: "price",
+    unit: "unit",
+    imageUrl: "image_url",
+    isFeatured: "is_featured",
+  };
+
+  Object.entries(payload).forEach(([key, value]) => {
+    values.push(value);
+    fields.push(`${keyMap[key]} = $${values.length}`);
+  });
+
+  values.push(id);
+  const query = `
+    UPDATE products
+    SET ${fields.join(", ")}, updated_at = NOW()
+    WHERE id = $${values.length}
+    RETURNING *
+  `;
+  const response = await pool.query(query, values);
+
+  if (!response.rows.length) {
+    return res.status(404).json({ message: "Product not found." });
+  }
+
+  return res.status(200).json({
+    message: "Product updated successfully.",
+    item: mapProduct(response.rows[0]),
+  });
+});
+
+const deleteProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const response = await pool.query("DELETE FROM products WHERE id = $1 RETURNING *", [id]);
+
+  if (!response.rows.length) {
+    return res.status(404).json({ message: "Product not found." });
+  }
+
+  return res.status(200).json({
+    message: "Product deleted successfully.",
+    item: mapProduct(response.rows[0]),
+  });
+});
+
+module.exports = {
+  getProducts,
+  getProductById,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+};

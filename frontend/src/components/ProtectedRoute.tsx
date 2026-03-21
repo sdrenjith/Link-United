@@ -1,15 +1,22 @@
 import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 type Props = {
-    children: React.ReactNode;
-}
+  children: React.ReactNode;
+};
 
 function ProtectedRoute({ children }: Props) {
-const token = localStorage.getItem("token");
-if(!token) {
-    return <Navigate to="/admin/login" />
-}
-return children;
+  const { token, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <div className="p-8 text-center text-zinc-300">Loading session...</div>;
+  }
+
+  if (!token) {
+    return <Navigate to="/admin/login" replace />;
+  }
+
+  return children;
 }
 
 export default ProtectedRoute;

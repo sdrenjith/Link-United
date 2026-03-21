@@ -1,16 +1,11 @@
 const express = require("express");
 const router = express.Router();
+const validate = require("../middleware/validate.middleware");
 const { authMiddleware } = require("../middleware/auth.middleware");
+const { login, me } = require("../controllers/auth.controller");
+const { loginSchema } = require("../validators/auth.validator");
 
-const { login } = require("../controllers/auth.controller");
-
-router.post("/login", login);
-
-router.get("/me", authMiddleware, async (req, res) => {
-  res.json({
-    message: "Protected route accessed",
-    user: req.user,
-  });
-});
+router.post("/login", validate(loginSchema), login);
+router.get("/me", authMiddleware, me);
 
 module.exports = router;
