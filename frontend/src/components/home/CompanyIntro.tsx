@@ -5,33 +5,6 @@ import AnimatedCounter from "../ui/AnimatedCounter";
 import TiltCard from "../ui/TiltCard";
 import GeometricLines from "../ui/GeometricLines";
 
-/* ── Word-by-word animated heading ────────────────────────── */
-function AnimatedTitle({ text, className = "" }: { text: string; className?: string }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.3 });
-  const words = text.split(" ");
-
-  return (
-    <h2 ref={ref} className={className}>
-      {words.map((word, i) => (
-        <motion.span
-          key={i}
-          className="inline-block mr-[0.3em]"
-          initial={{ opacity: 0, y: 30, filter: "blur(6px)" }}
-          animate={isInView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
-          transition={{
-            duration: 0.5,
-            delay: i * 0.06,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-        >
-          {word}
-        </motion.span>
-      ))}
-    </h2>
-  );
-}
-
 /* ── Cargo Ship Scene — placed under the title ────────────── */
 function CargoShipScene({ isInView }: { isInView: boolean }) {
   return (
@@ -60,7 +33,7 @@ function CargoShipScene({ isInView }: { isInView: boolean }) {
 
       {/* Doubled cargo ship with branding */}
       <motion.div
-        className="absolute bottom-[-8%] lg:bottom-[-6%] w-[56rem] sm:w-[64rem] md:w-[72rem] lg:w-[84rem]"
+        className="absolute bottom-[14%] lg:bottom-[18%] w-[48rem] sm:w-[56rem] md:w-[64rem] lg:w-[76rem]"
         initial={{ left: "-40%", y: 0, rotate: 0 }}
         animate={isInView ? {
           left: ["-40%", "100%"],
@@ -228,7 +201,7 @@ export default function CompanyIntro() {
             className="hidden lg:col-span-1 lg:flex lg:justify-center"
             initial={{ opacity: 0, x: -30 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ delay: 12.5, duration: 1, ease: "easeOut" }}
+            transition={{ delay: 7.3, duration: 1, ease: "easeOut" }}
           >
             <div className="sticky top-32">
               <p className="font-sans text-xs font-bold uppercase tracking-[0.3em] text-gold-400/80 [writing-mode:vertical-rl] rotate-180 h-48">
@@ -244,28 +217,28 @@ export default function CompanyIntro() {
               className="gold-text font-sans mb-4 text-xs font-bold uppercase tracking-[0.3em] lg:hidden"
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : {}}
-              transition={{ delay: 12.5, duration: 1 }}
+              transition={{ delay: 7.3, duration: 1 }}
             >
               Who We Are
             </motion.p>
 
-            {/* Animated heading (waits for ship to 80% marks 11.5s) */}
+            {/* Animated heading (waits for ship front at ~7.5s) */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 11.5, duration: 1, ease: "easeOut" }}
+              transition={{ delay: 7.5, duration: 1, ease: "easeOut" }}
             >
-              <h2 className="font-sans text-3xl font-semibold tracking-tight text-white sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.5rem] leading-[1.1]">
+              <h2 className="font-sans text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] xl:text-[3rem] leading-[1.1] font-light tracking-tight text-white">
                 A Global Bridge Between Manufacturers & Markets
               </h2>
             </motion.div>
 
-            {/* Body text (delayed to 12.5s) */}
+            {/* Body text (delayed to 7.8s) */}
             <motion.div
               className="mt-8 space-y-6 max-w-3xl"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 12.5, duration: 1, ease: "easeOut" }}
+              transition={{ delay: 7.8, duration: 1, ease: "easeOut" }}
             >
               <p className="font-body text-base leading-[1.85] text-[#999999]">
                 Constantly innovating and transforming — always with trust and
@@ -289,7 +262,7 @@ export default function CompanyIntro() {
           </div>
 
           {/* Right: Vertically stacked stats */}
-          <div className="lg:col-span-4 xl:col-span-3 mt-12 lg:mt-0 grid grid-cols-2 gap-4 lg:grid-cols-1 lg:gap-2">
+          <div className="lg:col-span-4 xl:col-span-3 mt-12 lg:mt-0 grid grid-cols-2 gap-x-2 gap-y-4 lg:grid-cols-1 lg:gap-2">
             {[
                 {
                   label: "UK & USA Offices",
@@ -335,14 +308,14 @@ export default function CompanyIntro() {
                 const cardShowTimes = [1.3, 3.3, 2.3, 4.3]; // Drops at 0.5, 1.5, 2.5, 3.5 hit the water ~0.8s later
                 const showTime = cardShowTimes[idx];
 
-                // Properly spaced geometry representing "horizontally more adjacent" but properly visible independently
-                const scatterX = ["-60vw", "-30vw", "-60vw", "-30vw"];
+                // Properly spaced geometry shaping the DOM vertical stack into a 2x2 square during entry
+                const scatterX = ["-48vw", "-22vw", "-48vw", "-22vw"];
                 const scatterY = [
-                  "10vh",                        // Row 1 (Top Left)
-                  "calc(10vh - 148px)",          // Row 1 (Top Right)
-                  "calc(10vh + 260px - 296px)",  // Row 2 (Bottom Left) sits exactly 260px absolute vertically below Row 1
-                  "calc(10vh + 260px - 444px)"   // Row 2 (Bottom Right) sits exactly 260px absolute vertically below Row 1
-                ]; 
+                  "-5vh",                        // Row 1 (Top Left)
+                  "calc(-5vh - 148px)",          // Row 1 (Top Right)
+                  "calc(-5vh + 210px - 296px)",  // Row 2 (Bottom Left) sits 210px vertically below Row 1
+                  "calc(-5vh + 210px - 444px)"   // Row 2 (Bottom Right) sits 210px vertically below Row 1
+                ];
 
                 return (
                  <motion.div
@@ -356,9 +329,9 @@ export default function CompanyIntro() {
                      opacity: 1
                    } : {}}
                    transition={{ 
-                     x: { duration: 12.0, times: [0, 11.0/12.0, 1], ease: "easeInOut" },
-                     y: { duration: 12.0, times: [0, 11.0/12.0, 1], ease: "easeInOut" },
-                     scale: { duration: 12.0, times: [0, 11.0/12.0, 1], ease: "easeInOut" },
+                     x: { duration: 7.5, times: [0, 6.5/7.5, 1], ease: "easeInOut" },
+                     y: { duration: 7.5, times: [0, 6.5/7.5, 1], ease: "easeInOut" },
+                     scale: { duration: 7.5, times: [0, 6.5/7.5, 1], ease: "easeInOut" },
                      opacity: { delay: showTime, duration: 0.3, ease: "easeOut" }
                    }}
                  >

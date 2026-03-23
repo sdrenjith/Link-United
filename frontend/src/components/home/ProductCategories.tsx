@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import Container from "../ui/Container";
+import SectionLabel from "../ui/SectionLabel";
 
 // Sourced optimal, high-quality images from the existing assets
 import exporting01 from "../../assets/images/exporting01.jpg";
@@ -60,14 +61,10 @@ export default function ProductCategories() {
       />
 
       <Container className="relative">
-        <div className="mb-12 text-left">
-          <p className="gold-text mb-3 text-xs font-bold uppercase tracking-[0.3em]">
-            Our Portfolio
-          </p>
-          <h2 className="font-sans text-3xl font-semibold tracking-tight text-white md:text-5xl lg:text-5xl">
-            Our Product Portfolio
-          </h2>
-        </div>
+        <SectionLabel
+          eyebrow="Our Portfolio"
+          title="Our Product Portfolio"
+        />
 
         <div className="grid gap-5 md:grid-cols-4 md:grid-rows-2">
           {categories.map((cat, i) => (

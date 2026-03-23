@@ -108,8 +108,8 @@ export default function Navbar() {
             <img
               src="/logo.png"
               alt="Link United International"
-              className="h-16 md:h-20 w-auto"
-              style={{ filter: "drop-shadow(0 0 12px rgba(201,151,58,0.4))" }}
+              className="h-20 md:h-28 lg:h-32 w-auto"
+              style={{ filter: "drop-shadow(0 0 12px rgba(201,151,58,0.5))" }}
             />
           </NavLink>
 
@@ -262,7 +262,7 @@ export default function Navbar() {
               <img
                 src="/logo.png"
                 alt="Link United International"
-                className="h-10 w-auto"
+                className="h-14 w-auto"
                 style={{ filter: "drop-shadow(0 0 12px rgba(201,151,58,0.4))" }}
               />
               <button

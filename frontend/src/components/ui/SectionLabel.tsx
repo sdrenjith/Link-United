@@ -16,26 +16,73 @@ export default function SectionLabel({
   centered,
   className,
 }: SectionLabelProps) {
+  // Split title into words for animation
+  const words = title.split(" ");
+
+  const container: any = {
+    hidden: { opacity: 0, y: 10 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { 
+        duration: 0.4, 
+        ease: "easeOut",
+      },
+    },
+  };
+
+  const child: any = {
+    visible: {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      transition: { duration: 0.3 }
+    },
+    hidden: {
+      opacity: 0,
+      y: 10,
+      filter: "blur(5px)",
+      transition: { duration: 0.3 }
+    },
+  };
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial="hidden"
+      whileInView="visible"
       viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
-      className={cn("mb-16 max-w-3xl", centered && "mx-auto text-center", className)}
+      variants={container}
+      className={cn("mb-16 max-w-4xl", centered && "mx-auto text-center", className)}
     >
       {eyebrow && (
-        <p className="gold-text mb-4 text-xs font-bold uppercase tracking-[0.3em]">
+        <motion.p 
+          variants={child}
+          className="gold-text mb-4 text-xs font-bold uppercase tracking-[0.3em]"
+        >
           {eyebrow}
-        </p>
+        </motion.p>
       )}
-      <h2 className="font-sans text-3xl font-semibold tracking-tight leading-tight text-white md:text-5xl">
-        {title}
-      </h2>
+      
+      <motion.h2 
+        className={cn(
+          "font-sans text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] xl:text-[3rem] leading-[1.1] font-light tracking-tight text-white flex flex-wrap gap-x-2 lg:gap-x-3",
+          centered ? "justify-center" : "justify-start"
+        )}
+      >
+        {words.map((word, index) => (
+          <motion.span variants={child} key={index} className="inline-block">
+            {word}
+          </motion.span>
+        ))}
+      </motion.h2>
+      
       {description && (
-        <p className="mt-5 text-lg leading-relaxed text-[#888888]">
+        <motion.p 
+          variants={child}
+          className="mt-5 text-base sm:text-lg md:text-xl leading-relaxed text-[#888888]"
+        >
           {description}
-        </p>
+        </motion.p>
       )}
     </motion.div>
   );

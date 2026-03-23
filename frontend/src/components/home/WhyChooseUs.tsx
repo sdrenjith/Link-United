@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Container from "../ui/Container";
+import SectionLabel from "../ui/SectionLabel";
 
 import videoSrc from "../../assets/videos/home-video01.mp4";
 
@@ -33,9 +34,26 @@ export default function WhyChooseUs() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const [isLocked, setIsLocked] = useState(false);
+  
+  const isLockedRef = useRef(false);
+  const activeIndexRef = useRef(0);
+  const lockedScrollYRef = useRef<number | null>(null);
+  
   const cooldownRef = useRef(false);
   const unlockCooldownRef = useRef(false);
   const touchStartY = useRef(0);
+
+  // Sync state to refs for synchronous wheel handling
+  useEffect(() => {
+    isLockedRef.current = isLocked;
+    if (!isLocked) {
+      lockedScrollYRef.current = null;
+    }
+  }, [isLocked]);
+  
+  useEffect(() => {
+    activeIndexRef.current = activeIndex;
+  }, [activeIndex]);
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
@@ -47,7 +65,7 @@ export default function WhyChooseUs() {
       const vh = window.innerHeight;
 
       // ---- NOT LOCKED: check if card is fully visible before locking ----
-      if (!isLocked) {
+      if (!isLockedRef.current) {
         if (unlockCooldownRef.current) return;
 
         // Card is fully visible when its top >= 0 and bottom <= viewport height
@@ -63,10 +81,12 @@ export default function WhyChooseUs() {
           setActiveIndex(0);
           setDirection(1);
           setIsLocked(true);
+          isLockedRef.current = true;
           // Snap so card sits comfortably below the navbar
           const navbarOffset = 50; // space above card to clear menubar
           const cardCenter = window.scrollY + cardRect.top + cardRect.height / 2;
           const snapTo = cardCenter - vh / 2 - navbarOffset;
+          lockedScrollYRef.current = snapTo;
           window.scrollTo({ top: snapTo, behavior: "smooth" });
           return;
         }
@@ -76,9 +96,11 @@ export default function WhyChooseUs() {
           setActiveIndex(items.length - 1);
           setDirection(-1);
           setIsLocked(true);
+          isLockedRef.current = true;
           const navbarOffset = 50;
           const cardCenter = window.scrollY + cardRect.top + cardRect.height / 2;
           const snapTo = cardCenter - vh / 2 - navbarOffset;
+          lockedScrollYRef.current = snapTo;
           window.scrollTo({ top: snapTo, behavior: "smooth" });
           return;
         }
@@ -88,25 +110,32 @@ export default function WhyChooseUs() {
 
       // ---- LOCKED: intercept all scrolling ----
       e.preventDefault();
+      
+      // Enforce scroll position rigidly so trackpad/momentum scroll doesn't jiggle the page.
+      if (lockedScrollYRef.current !== null) {
+        window.scrollTo({ top: lockedScrollYRef.current });
+      }
 
       if (cooldownRef.current) return;
 
-      if (scrollingDown && activeIndex < items.length - 1) {
+      if (scrollingDown && activeIndexRef.current < items.length - 1) {
         cooldownRef.current = true;
         setDirection(1);
         setActiveIndex((prev) => prev + 1);
         setTimeout(() => { cooldownRef.current = false; }, 800);
-      } else if (scrollingUp && activeIndex > 0) {
+      } else if (scrollingUp && activeIndexRef.current > 0) {
         cooldownRef.current = true;
         setDirection(-1);
         setActiveIndex((prev) => prev - 1);
         setTimeout(() => { cooldownRef.current = false; }, 800);
-      } else if (scrollingDown && activeIndex === items.length - 1) {
+      } else if (scrollingDown && activeIndexRef.current === items.length - 1) {
         setIsLocked(false);
+        isLockedRef.current = false;
         unlockCooldownRef.current = true;
         setTimeout(() => { unlockCooldownRef.current = false; }, 1500);
-      } else if (scrollingUp && activeIndex === 0) {
+      } else if (scrollingUp && activeIndexRef.current === 0) {
         setIsLocked(false);
+        isLockedRef.current = false;
         unlockCooldownRef.current = true;
         setTimeout(() => { unlockCooldownRef.current = false; }, 1500);
       }
@@ -132,7 +161,7 @@ export default function WhyChooseUs() {
       window.removeEventListener("touchstart", handleTouchStart);
       window.removeEventListener("touchmove", handleTouchMove);
     };
-  }, [isLocked, activeIndex]);
+  }, []);
 
   return (
     <section
@@ -152,15 +181,11 @@ export default function WhyChooseUs() {
         />
 
         <Container className="w-full relative z-10">
-          {/* Main Heading */}
-          <div className="mb-12 lg:mb-20">
-            <p className="gold-text mb-4 text-xs font-bold uppercase tracking-[0.3em]">
-              Why Choose Us
-            </p>
-            <h2 className="font-sans text-4xl font-semibold tracking-tight text-white md:text-5xl lg:text-7xl">
-              Enterprise-Grade Trade Confidence
-            </h2>
-          </div>
+          <SectionLabel
+            eyebrow="Why Choose Us"
+            title="Enterprise-Grade Trade Confidence"
+            className="mb-12 lg:mb-20"
+          />
 
           {/* Unified Dual-Card Container */}
           <div

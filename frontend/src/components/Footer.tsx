@@ -32,8 +32,8 @@ export default function Footer() {
             <img
               src="/logo.png"
               alt="Link United International"
-              className="mb-5 h-12 w-auto"
-              style={{ filter: "drop-shadow(0 0 8px rgba(201,151,58,0.3))" }}
+              className="mb-5 h-20 w-auto"
+              style={{ filter: "drop-shadow(0 0 8px rgba(201,151,58,0.4))" }}
             />
             <p className="font-display text-sm italic text-zinc-500">
               Connecting with signature of trust
