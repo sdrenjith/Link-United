@@ -8,6 +8,10 @@ const productsRoutes = require("./routes/products.route");
 const mediaRoutes = require("./routes/media.routes");
 const enquiriesRoutes = require("./routes/enquiries.routes");
 const dashboardRoutes = require("./routes/dashboard.routes");
+const uploadRoutes = require("./routes/upload.routes");
+const slidersRoutes = require("./routes/sliders.routes");
+const homeSlidersRoutes = require('./routes/home-sliders.routes');
+const announcementsRoutes = require('./routes/announcements.routes');
 const { notFoundMiddleware, errorMiddleware } = require("./middleware/error.middleware");
 
 const app = express();
@@ -35,6 +39,10 @@ app.use("/api/v1/products", productsRoutes);
 app.use("/api/v1/media", mediaRoutes);
 app.use("/api/v1/enquiries", enquiriesRoutes);
 app.use("/api/v1/dashboard", dashboardRoutes);
+app.use("/api/v1/upload", uploadRoutes);
+app.use("/api/v1/sliders", slidersRoutes);
+app.use("/api/v1/home-sliders", homeSlidersRoutes);
+app.use("/api/v1/announcements", announcementsRoutes);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

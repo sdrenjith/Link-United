@@ -13,7 +13,7 @@ function ProtectedRoute({ children }: Props) {
   }
 
   if (!token) {
-    return <Navigate to="/admin/login" replace />;
+    return <Navigate to="/admin" replace />;
   }
 
   return children;

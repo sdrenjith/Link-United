@@ -9,7 +9,6 @@ import GoldButton from "../ui/GoldButton";
 // Sourced internal images
 import shipHome01 from "../../assets/images/ship-home01.jpg";
 import exporting01 from "../../assets/images/exporting01.jpg";
-import spices03 from "../../assets/images/spices03.jpg";
 import exporting02 from "../../assets/images/exporting02.jpg";
 import spices01 from "../../assets/images/spices01.jpg";
 
@@ -39,19 +38,6 @@ const tabs = [
     body: "Strategically located warehousing facilities across key global markets to securely store, manage, and distribute your goods with maximum efficiency.",
     features: ["Bonded Warehousing", "Inventory Management", "Pick & Pack Services", "Cross-Docking"],
     image: exporting01
-  },
-  {
-    id: "clear",
-    label: "Clear & Protect",
-    icon: (
-      <svg className="w-6 h-6 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-      </svg>
-    ),
-    title: "Customs & Compliance",
-    body: "Navigate complex global trade regulations with ease. We handle customs clearance, cargo insurance, and regulatory compliance to keep your supply chain moving without delays.",
-    features: ["Customs Brokerage", "Cargo Insurance", "Trade Compliance", "Risk Management"],
-    image: spices03
   },
   {
     id: "management",
@@ -99,36 +85,40 @@ export default function ServicesPreview() {
         />
 
         {/* Tab Navigation Menu */}
-        <div className="relative mt-12 lg:mt-16 border-b border-zinc-800/80 w-full">
-          <div className="w-full max-w-5xl mx-auto px-2 sm:px-6">
-            <div className="flex justify-between items-end w-full">
+        <div className="relative mt-12 lg:mt-16 w-full">
+          {/* Desktop persistent full-width underline overlaying the individuals */}
+          <div className="hidden lg:block absolute bottom-0 left-0 right-0 h-px bg-zinc-800/80 -z-10" />
+
+          <div className="w-full max-w-5xl mx-auto px-4 sm:px-6">
+            
+            {/* 2x2 Grid on Mobile, Flex Row on Desktop */}
+            <div className="grid grid-cols-2 lg:flex lg:justify-between items-end gap-x-4 gap-y-10 lg:gap-y-0 lg:gap-x-0 w-full">
               {tabs.map((tab) => {
                 const isActive = activeTab === tab.id;
                 return (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className="relative flex-1 flex flex-col items-center pb-4 pt-2 group"
+                    className="relative flex-1 flex flex-col items-center pb-4 pt-2 group border-b border-zinc-800/80 lg:border-b-0"
                     style={{ WebkitTapHighlightColor: "transparent" }}
                   >
                     {/* Inner content wrapper controls the width of the active gold indicator */}
-                    <div className={`relative flex flex-col items-center transition-colors duration-300 ${
+                    <div className={`relative flex flex-col items-center justify-end h-full transition-colors duration-300 w-full sm:max-w-[160px] ${
                       isActive ? "text-gold-400" : "text-zinc-500 group-hover:text-white"
                     }`}>
-                      <div className={`mb-2 transition-transform duration-300 ${!isActive && "group-hover:-translate-y-1"}`}>
+                      <div className={`mb-3 transition-transform duration-300 ${!isActive && "group-hover:-translate-y-1"}`}>
                         {tab.icon}
                       </div>
 
-                      {/* Text allowed to wrap to two lines on smaller screens */}
-                      <span className="text-center text-[10px] sm:text-[13px] md:text-sm font-sans font-medium tracking-wide leading-[1.3] max-w-[75px] sm:max-w-[120px]">
+                      <span className="text-center text-[10px] sm:text-[11px] lg:text-[12px] xl:text-[13px] font-sans font-bold uppercase tracking-[0.15em] leading-[1.4] mt-1 flex items-center justify-center min-h-[32px]">
                         {tab.label}
                       </span>
                       
+                      {/* Active Indicator positioned perfectly over the border */}
                       {isActive && (
                         <motion.div
                           layoutId="activeTabIndicator"
-                          // Positioned exactly over the bottom border of the parent container
-                          className="absolute -bottom-[1.05rem] left-[-0.25rem] right-[-0.25rem] h-[2px] bg-gold-400"
+                          className="absolute -bottom-[17px] left-0 right-0 h-[2px] bg-gold-400 mx-auto w-full lg:w-[120%]"
                           transition={{ type: "spring", stiffness: 300, damping: 30 }}
                         />
                       )}

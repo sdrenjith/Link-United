@@ -20,6 +20,8 @@ const features = [
 export default function KidsClothing() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
+  const [activeSubCategory, setActiveSubCategory] = useState<string | null>(null);
+  const kidsSubCategories = ["Babys", "Kids", "Teens"];
 
   useEffect(() => {
     const load = async () => {
@@ -33,6 +35,10 @@ export default function KidsClothing() {
     };
     void load();
   }, []);
+
+  const displayedProducts = activeSubCategory
+    ? products.filter((product) => product.subCategory === activeSubCategory)
+    : products;
 
   return (
     <>
@@ -63,15 +69,41 @@ export default function KidsClothing() {
             </div>
           </ScrollReveal>
 
+          <div className="mx-auto mt-10 flex max-w-3xl flex-wrap items-center justify-center gap-3 rounded-2xl border border-zinc-800/50 bg-zinc-900/50 p-4">
+            <button
+              className={`rounded border px-4 py-1.5 text-xs transition-all duration-300 ${
+                activeSubCategory === null
+                  ? "border-gold-400/50 bg-gold-400/10 text-gold-300"
+                  : "border-zinc-800 bg-zinc-950 text-zinc-400 hover:border-zinc-600 hover:text-zinc-200"
+              }`}
+              onClick={() => setActiveSubCategory(null)}
+            >
+              All Kids Clothing
+            </button>
+            {kidsSubCategories.map((sub) => (
+              <button
+                key={sub}
+                className={`rounded border px-4 py-1.5 text-xs transition-all duration-300 ${
+                  activeSubCategory === sub
+                    ? "border-gold-400/50 bg-gold-400/10 text-gold-300"
+                    : "border-zinc-800 bg-zinc-950 text-zinc-400 hover:border-zinc-600 hover:text-zinc-200"
+                }`}
+                onClick={() => setActiveSubCategory(sub)}
+              >
+                {sub}
+              </button>
+            ))}
+          </div>
+
           {loading && (
             <div className="py-20 text-center">
               <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-gold-400 border-t-transparent" />
             </div>
           )}
 
-          {!loading && products.length > 0 && (
+          {!loading && displayedProducts.length > 0 && (
             <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {products.map((product, i) => (
+              {displayedProducts.map((product, i) => (
                 <motion.div
                   key={product.id}
                   initial={{ opacity: 0, y: 30 }}

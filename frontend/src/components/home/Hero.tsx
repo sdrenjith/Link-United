@@ -84,15 +84,34 @@ function ScrollIndicator() {
 
 export default function Hero() {
   const [current, setCurrent] = useState(0);
+  const [dbSliders, setDbSliders] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Fetch dynamic sliders from admin panel
+    import("../../services/http").then((api) => {
+      api.default.get("/home-sliders")
+        .then((res) => {
+          if (res.data.items && res.data.items.length > 0) {
+            setDbSliders(res.data.items);
+          }
+        })
+        .catch((err) => console.error("Failed to load hero sliders", err));
+    });
+  }, []);
+
+  // Determine which images to show. If the admin uploaded 0 images, fallback to the hardcoded ones.
+  const activeImages = dbSliders.length > 0 ? dbSliders.map(s => s.imageUrl) : slides.map(s => s.image);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % slides.length);
+      setCurrent((prev) => (prev + 1) % activeImages.length);
     }, 4000);
     return () => clearInterval(timer);
-  }, []);
+  }, [activeImages.length]);
 
-  const slide = slides[current];
+  // Merge the dynamic image with the static text by modulo mapping
+  const currentImage = activeImages[current];
+  const slideText = slides[current % slides.length];
 
   // Helper to split title and wrap highlight
   const renderTitle = (title: string, highlight: string) => {
@@ -112,7 +131,7 @@ export default function Hero() {
       {/* Background Image Slider */}
       <AnimatePresence initial={false}>
         <motion.div
-          key={current}
+          key={currentImage}
           initial={{ opacity: 0, scale: 1.05 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
@@ -120,8 +139,8 @@ export default function Hero() {
           className="absolute inset-0 z-0"
         >
           <img
-            src={slide.image}
-            alt={slide.title}
+            src={currentImage}
+            alt={slideText.title}
             className="h-full w-full object-cover"
           />
         </motion.div>
@@ -160,15 +179,15 @@ export default function Hero() {
                 className="flex flex-col items-center"
               >
                 <p className="font-sans mb-6 text-xs font-bold uppercase tracking-[0.3em]" style={{ color: "rgba(201,151,58,0.8)" }}>
-                  {slide.eyebrow}
+                  {slideText.eyebrow}
                 </p>
 
                 <h1 className="font-sans text-3xl font-semibold leading-tight text-white md:text-5xl lg:text-6xl md:whitespace-nowrap px-4" style={{ letterSpacing: "-0.01em" }}>
-                  {renderTitle(slide.title, slide.highlight)}
+                  {renderTitle(slideText.title, slideText.highlight)}
                 </h1>
 
                 <p className="font-sans block mx-auto mt-6 max-w-3xl text-base md:text-xl text-zinc-300 font-normal">
-                  {slide.subtitle}
+                  {slideText.subtitle}
                 </p>
               </motion.div>
             </AnimatePresence>
@@ -192,7 +211,7 @@ export default function Hero() {
 
       {/* Slide Indicators */}
       <div className="absolute bottom-24 left-1/2 z-20 flex -translate-x-1/2 gap-3">
-        {slides.map((_, idx) => (
+        {activeImages.map((_, idx) => (
           <button
             key={idx}
             onClick={() => setCurrent(idx)}

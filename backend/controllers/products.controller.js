@@ -5,6 +5,7 @@ const mapProduct = (row) => ({
   id: row.id,
   name: row.name,
   category: row.category,
+  subCategory: row.sub_category,
   shortDescription: row.short_description,
   description: row.description,
   price: Number(row.price),
@@ -16,13 +17,18 @@ const mapProduct = (row) => ({
 });
 
 const getProducts = asyncHandler(async (req, res) => {
-  const { category } = req.query;
+  const { category, subCategory } = req.query;
   const params = [];
-  let query = "SELECT * FROM products";
+  let query = "SELECT * FROM products WHERE 1=1";
 
   if (category) {
     params.push(category);
-    query += " WHERE category = $1";
+    query += ` AND category = $${params.length}`;
+  }
+
+  if (subCategory) {
+    params.push(subCategory);
+    query += ` AND sub_category = $${params.length}`;
   }
 
   query += " ORDER BY created_at DESC";
@@ -42,20 +48,21 @@ const getProductById = asyncHandler(async (req, res) => {
 });
 
 const createProduct = asyncHandler(async (req, res) => {
-  const { name, category, shortDescription, description, price, unit, imageUrl, isFeatured } =
+  const { name, category, subCategory, shortDescription, description, price, unit, imageUrl, isFeatured } =
     req.validated.body;
 
   const query = `
     INSERT INTO products
-      (name, category, short_description, description, price, unit, image_url, is_featured)
+      (name, category, sub_category, short_description, description, price, unit, image_url, is_featured)
     VALUES
-      ($1, $2, $3, $4, $5, $6, $7, $8)
+      ($1, $2, $3, $4, $5, $6, $7, $8, $9)
     RETURNING *
   `;
 
   const result = await pool.query(query, [
     name,
     category,
+    subCategory,
     shortDescription,
     description,
     price,
@@ -79,6 +86,7 @@ const updateProduct = asyncHandler(async (req, res) => {
   const keyMap = {
     name: "name",
     category: "category",
+    subCategory: "sub_category",
     shortDescription: "short_description",
     description: "description",
     price: "price",

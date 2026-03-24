@@ -4,10 +4,8 @@ import Container from "../ui/Container";
 import SectionLabel from "../ui/SectionLabel";
 
 // Sourced optimal, high-quality images from the existing assets
-import exporting01 from "../../assets/images/exporting01.jpg";
 import spices03 from "../../assets/images/spices03.jpg";
 import shipHome01 from "../../assets/images/ship-home01.jpg";
-import exporting02 from "../../assets/images/exporting02.jpg";
 import spices01 from "../../assets/images/spices01.jpg";
 
 const categories = [
@@ -15,7 +13,7 @@ const categories = [
     name: "Vehicles & Machinery",
     tagline: "Heavy equipment, vehicles & industrial machinery for global markets",
     path: "/products/vehicles-machinery",
-    image: exporting01,
+    image: "/images/sliders/1774343175331-427782007-commercial.jpg",
     span: "md:col-span-2 md:row-span-2",
   },
   {
@@ -29,7 +27,7 @@ const categories = [
     name: "Kids Clothing",
     tagline: "Quality children's apparel for international retail",
     path: "/products/kids-clothing",
-    image: exporting02,
+    image: "/images/sliders/1774343175357-18293185-kids01.jpg",
     span: "",
   },
   {

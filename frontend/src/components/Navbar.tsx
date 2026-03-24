@@ -67,6 +67,7 @@ const productCategories = [
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
+  const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const megaTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
@@ -95,13 +96,14 @@ export default function Navbar() {
   };
 
   return (
-    <header
-      className={`fixed top-0 z-[100] w-full transition-all duration-500 ${
-        scrolled
-          ? "border-b border-gold-400/10 bg-dark-600/80 shadow-lg shadow-black/40 backdrop-blur-2xl"
-          : "bg-transparent"
-      }`}
-    >
+    <>
+      <header
+        className={`fixed top-0 z-[100] w-full transition-all duration-500 ${
+          scrolled
+            ? "border-b border-gold-400/10 bg-[#080808]/90 shadow-lg shadow-black/40 backdrop-blur-2xl"
+            : "bg-transparent"
+        }`}
+      >
       <Container>
         <nav className="flex items-center justify-between py-4">
           <NavLink to="/" className="flex items-center gap-3">
@@ -248,7 +250,9 @@ export default function Navbar() {
         )}
       </AnimatePresence>
 
-      {/* Mobile Full-Screen Menu */}
+      </header>
+
+      {/* Mobile Full-Screen Menu moved outside the header container to fix CSS backdrop-blur stacking context clipping bugs when scrolled */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -256,17 +260,30 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 top-0 z-40 flex flex-col bg-dark-600/98 backdrop-blur-2xl lg:hidden"
+            className="fixed inset-0 top-0 z-[120] flex flex-col bg-[#050505] lg:hidden overflow-hidden"
           >
-            <div className="flex items-center justify-between px-5 py-4">
+            {/* Minimal Grid Background */}
+            <div
+              className="pointer-events-none absolute inset-0 opacity-[0.02]"
+              style={{
+                backgroundImage:
+                  "linear-gradient(rgba(201,151,58,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(201,151,58,0.5) 1px, transparent 1px)",
+                backgroundSize: "40px 40px",
+              }}
+            />
+            {/* Top Glow Ambient */}
+            <div className="pointer-events-none absolute -top-[20%] -left-[10%] h-[300px] w-[300px] rounded-full bg-gold-400 opacity-[0.04] blur-[80px]" />
+
+            {/* Integrated Header Bar */}
+            <div className="relative z-10 flex items-center justify-between px-5 py-4 border-b border-white/[0.04] bg-[#050505]/90 backdrop-blur-md">
               <img
                 src="/logo.png"
                 alt="Link United International"
-                className="h-14 w-auto"
-                style={{ filter: "drop-shadow(0 0 12px rgba(201,151,58,0.4))" }}
+                className="h-10 sm:h-12 w-auto"
+                style={{ filter: "drop-shadow(0 0 10px rgba(201,151,58,0.3))" }}
               />
               <button
-                className="flex h-10 w-10 items-center justify-center rounded-lg border border-zinc-700/50 text-zinc-300"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.02] text-zinc-300 transition hover:scale-95 active:bg-white/10"
                 onClick={() => setMenuOpen(false)}
                 aria-label="Close menu"
               >
@@ -276,39 +293,113 @@ export default function Navbar() {
               </button>
             </div>
 
-            <div className="flex flex-1 flex-col justify-center px-8">
-              {[...navLinks, { label: "Contact", path: "/contact" }].map(
-                (item, i) => (
-                  <motion.div
-                    key={item.path}
-                    initial={{ opacity: 0, x: -30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 + i * 0.08, duration: 0.4 }}
-                  >
-                    <NavLink
-                      to={item.path}
-                      onClick={() => setMenuOpen(false)}
-                      className={({ isActive }) =>
-                        `block border-b border-zinc-800/50 py-5 font-body text-2xl font-medium tracking-wide transition ${
-                          isActive ? "text-gold-200" : "text-zinc-300 hover:text-white"
-                        }`
-                      }
+            {/* Menu Links scrollable area */}
+            <div className="relative z-10 flex flex-1 flex-col px-8 pt-6 pb-12 overflow-y-auto space-y-1">
+              {[...navLinks, { label: "Contact Us", path: "/contact" }].map(
+                (item, i) => {
+                  if (item.hasMega) {
+                    return (
+                      <div key={item.path} className="border-b border-white/[0.03]">
+                        <button
+                          onClick={() => setMobileProductsOpen(!mobileProductsOpen)}
+                          className="group flex w-full items-center justify-between py-5 transition-all duration-300 text-zinc-500 hover:text-white"
+                        >
+                          <span className="font-sans text-2xl sm:text-3xl font-light tracking-tight transition-colors">
+                            {item.label}
+                          </span>
+                          <svg 
+                            className={`w-5 h-5 transition-transform duration-300 ${mobileProductsOpen ? 'rotate-180 text-gold-400' : ''}`} 
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </button>
+                        
+                        {/* Submenu Accordion */}
+                        <AnimatePresence>
+                          {mobileProductsOpen && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              className="overflow-hidden"
+                            >
+                              <div className="flex flex-col gap-5 pb-8 pl-2">
+                                {productCategories.map((cat) => (
+                                  <NavLink
+                                    key={cat.path}
+                                    to={cat.path}
+                                    onClick={() => setMenuOpen(false)}
+                                    className={({ isActive }) =>
+                                      `group flex items-start gap-4 transition-all duration-300 ${
+                                        isActive ? "text-gold-300" : "text-zinc-400 hover:text-white hover:translate-x-1"
+                                      }`
+                                    }
+                                  >
+                                    <span className="mt-0.5 flex-shrink-0 text-gold-500/40 group-hover:text-gold-400 transition-colors duration-300">{cat.icon}</span>
+                                    <div>
+                                      <span className="block font-sans text-[15px] font-medium tracking-wide">{cat.name}</span>
+                                      <span className="block font-sans mt-1 text-[11px] leading-[1.3] text-zinc-500">{cat.desc}</span>
+                                    </div>
+                                  </NavLink>
+                                ))}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    )
+                  }
+
+                  return (
+                    <motion.div
+                      key={item.path}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.1 + i * 0.06, duration: 0.4, ease: "easeOut" }}
                     >
-                      {item.label}
-                    </NavLink>
-                  </motion.div>
-                )
+                      <NavLink
+                        to={item.path}
+                        onClick={() => setMenuOpen(false)}
+                        className={({ isActive }) =>
+                          `group flex items-center justify-between border-b border-white/[0.03] py-5 transition-all duration-300 ${
+                            isActive ? "text-gold-300 border-white/[0.08]" : "text-zinc-500 hover:text-white"
+                          }`
+                        }
+                      >
+                        <span className="font-sans text-2xl sm:text-3xl font-light tracking-tight transition-colors">
+                          {item.label}
+                        </span>
+                        <svg 
+                          className="w-5 h-5 transition-all duration-300 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 group-hover:text-gold-400"
+                          fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </NavLink>
+                    </motion.div>
+                  )
+                }
               )}
             </div>
 
-            <div className="px-8 pb-10">
-              <p className="text-xs text-zinc-500">
-                info@linkunited.co.uk
+            {/* Anchor Footer */}
+            <motion.div 
+               className="relative z-10 px-8 pb-10 pt-4 mt-auto border-t border-white/[0.02]"
+               initial={{ opacity: 0, y: 10 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: 0.5, duration: 0.5 }}
+            >
+              <p className="font-sans text-[9px] uppercase tracking-[0.25em] font-bold text-zinc-600 mb-2">
+                Get in Touch
               </p>
-            </div>
+              <a href="mailto:info@linkunited.co.uk" className="text-sm font-light text-gold-400/70 tracking-wide transition hover:text-gold-400">
+                info@linkunited.co.uk
+              </a>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }

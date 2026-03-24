@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -16,13 +16,19 @@ import Dashboard from "./pages/admin/Dashboard";
 import DashboardHome from "./pages/admin/DashboardHome";
 import ProductsManager from "./pages/admin/ProductsManager";
 import MediaManager from "./pages/admin/MediaManager";
+import SlidersManager from "./pages/admin/SlidersManager";
+import HomeSlidersManager from "./pages/admin/HomeSlidersManager";
+import AnnouncementsManager from "./pages/admin/AnnouncementsManager";
 import EnquiriesPage from "./pages/admin/EnquiriesPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <Routes>
-      <Route path="/admin/login" element={<Login />} />
+      {/* Admin Auth Routes */}
+      <Route path="/admin" element={<Login />} />
+      <Route path="/admin/login" element={<Navigate to="/admin" replace />} />
+
       <Route
         path="/admin/dashboard"
         element={
@@ -34,6 +40,9 @@ function App() {
         <Route index element={<DashboardHome />} />
         <Route path="products" element={<ProductsManager />} />
         <Route path="media" element={<MediaManager />} />
+        <Route path="sliders" element={<SlidersManager />} />
+        <Route path="home-sliders" element={<HomeSlidersManager />} />
+        <Route path="announcements" element={<AnnouncementsManager />} />
         <Route path="enquiries" element={<EnquiriesPage />} />
       </Route>
       <Route element={<MainLayout />}>

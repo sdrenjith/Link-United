@@ -1,5 +1,6 @@
 const pool = require("../config/db");
 const asyncHandler = require("../utils/async-handler");
+const { sendEnquiryEmail } = require("../services/email.service");
 
 const mapEnquiry = (row) => ({
   id: row.id,
@@ -23,9 +24,20 @@ const createEnquiry = asyncHandler(async (req, res) => {
     [name, email, phone, company, message],
   );
 
+  const enquiry = result.rows[0];
+
+  // Send emails (async - don't wait for it)
+  sendEnquiryEmail({
+    name: enquiry.name,
+    email: enquiry.email,
+    phone: enquiry.phone,
+    company: enquiry.company,
+    message: enquiry.message,
+  });
+
   return res.status(201).json({
     message: "Enquiry submitted successfully.",
-    item: mapEnquiry(result.rows[0]),
+    item: mapEnquiry(enquiry),
   });
 });
 

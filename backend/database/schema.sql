@@ -42,3 +42,11 @@ CREATE TABLE IF NOT EXISTS enquiries (
   status VARCHAR(20) NOT NULL DEFAULT 'new',
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+CREATE TABLE IF NOT EXISTS product_sliders (
+  id SERIAL PRIMARY KEY,
+  category_number VARCHAR(10) NOT NULL,
+  image_url TEXT NOT NULL,
+  order_index INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

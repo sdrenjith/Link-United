@@ -12,6 +12,7 @@ const productPayload = z.object({
   category: z
     .string()
     .refine((value) => categories.includes(value), "Invalid product category."),
+  subCategory: z.string().optional(),
   shortDescription: z.string().min(10).max(200),
   description: z.string().min(20).max(2000),
   price: z.number().min(0),

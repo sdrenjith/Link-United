@@ -2,11 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import Button from "../../components/ui/Button";
 import { categoryMeta } from "../../constants/site";
 import { productsService } from "../../services/products.service";
+import api from "../../services/http";
 import type { Product, ProductCategory } from "../../types/api";
 
 const emptyProduct = {
   name: "",
   category: "general-products" as ProductCategory,
+  subCategory: "",
   shortDescription: "",
   description: "",
   price: 0,
@@ -15,10 +17,28 @@ const emptyProduct = {
   isFeatured: false,
 };
 
+const agroSubCategories = [
+  "Masala powder",
+  "Direct powder",
+  "Breakfast products",
+  "Packed products",
+  "Whole spices",
+  "Other food products",
+  "Rice",
+  "Pickles",
+  "Paste",
+  "Sauce",
+  "Chutney",
+  "Millets and pulses"
+];
+
+const kidsSubCategories = ["Babys", "Kids", "Teens"];
+
 function ProductsManager() {
   const [products, setProducts] = useState<Product[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState(emptyProduct);
+  const [isUploading, setIsUploading] = useState(false);
 
   const loadProducts = async () => {
     const data = await productsService.list();
@@ -48,6 +68,7 @@ function ProductsManager() {
     setForm({
       name: item.name,
       category: item.category,
+      subCategory: item.subCategory || "",
       shortDescription: item.shortDescription,
       description: item.description,
       price: item.price,
@@ -62,22 +83,88 @@ function ProductsManager() {
     await loadProducts();
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const res = await api.post("/upload", formData, {
+        params: { type: "products" },
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setForm((prev) => ({ ...prev, imageUrl: res.data.url }));
+    } catch (err: any) {
+      console.error(err);
+      alert("Error uploading image: " + (err.response?.data?.message || err.message));
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-semibold text-white">Manage Products</h1>
       <form onSubmit={handleSubmit} className="grid gap-3 rounded-lg border border-zinc-700 bg-zinc-900 p-4 md:grid-cols-2">
-        <input className="rounded border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm" placeholder="Product Name" value={form.name} onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))} />
-        <select className="rounded border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm" value={form.category} onChange={(e) => setForm((prev) => ({ ...prev, category: e.target.value as ProductCategory }))}>
+        <input className="rounded border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm" placeholder="Product Name" value={form.name} onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))} required />
+        <select
+          className="rounded border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm"
+          value={form.category}
+          onChange={(e) =>
+            setForm((prev) => ({
+              ...prev,
+              category: e.target.value as ProductCategory,
+              subCategory:
+                e.target.value === "agro-commodities" || e.target.value === "kids-clothing"
+                  ? prev.subCategory
+                  : "",
+            }))
+          }
+          required
+        >
           {categoryMeta.map((item) => (
             <option value={item.key} key={item.key}>
               {item.label}
             </option>
           ))}
         </select>
-        <input className="rounded border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm" placeholder="Short Description" value={form.shortDescription} onChange={(e) => setForm((prev) => ({ ...prev, shortDescription: e.target.value }))} />
-        <input className="rounded border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm" placeholder="Image URL" value={form.imageUrl} onChange={(e) => setForm((prev) => ({ ...prev, imageUrl: e.target.value }))} />
-        <input className="rounded border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm" placeholder="Unit (kg, ton)" value={form.unit} onChange={(e) => setForm((prev) => ({ ...prev, unit: e.target.value }))} />
-        <input className="rounded border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm" type="number" placeholder="Price" value={form.price} onChange={(e) => setForm((prev) => ({ ...prev, price: Number(e.target.value) }))} />
+
+        {/* Conditional Sub-Category Dropdown for Agro and Kids Clothing */}
+        {(form.category === "agro-commodities" || form.category === "kids-clothing") && (
+          <select 
+            className="rounded border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm md:col-span-2" 
+            value={form.subCategory || ""} 
+            onChange={(e) => setForm((prev) => ({ ...prev, subCategory: e.target.value }))}
+            required
+          >
+            <option value="" disabled>Select Sub-Category</option>
+            {(form.category === "agro-commodities" ? agroSubCategories : kidsSubCategories).map((sub) => (
+              <option value={sub} key={sub}>{sub}</option>
+            ))}
+          </select>
+        )}
+        <input className="rounded border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm" placeholder="Short Description" value={form.shortDescription} onChange={(e) => setForm((prev) => ({ ...prev, shortDescription: e.target.value }))} required />
+        
+        {/* Dynamic Image Uploader */}
+        <div className="flex items-center gap-3 rounded border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm">
+          {form.imageUrl && (
+            <img src={form.imageUrl} alt="Thumbnail" className="h-8 w-8 rounded object-cover border border-zinc-700 bg-zinc-900" />
+          )}
+          <div className="flex-1 flex flex-col justify-center">
+            {isUploading ? (
+              <span className="text-gold-400 text-xs font-medium animate-pulse">Uploading image...</span>
+            ) : (
+              <input type="file" accept="image/*" onChange={handleImageUpload} className="text-zinc-400 w-full file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:bg-zinc-800 file:text-zinc-300 hover:file:bg-zinc-700 file:text-xs file:cursor-pointer cursor-pointer text-xs" />
+            )}
+            <input type="hidden" value={form.imageUrl} required />
+          </div>
+        </div>
+
+        <input className="rounded border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm" placeholder="Unit (kg, ton)" value={form.unit} onChange={(e) => setForm((prev) => ({ ...prev, unit: e.target.value }))} required />
+        <input className="rounded border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm" type="number" placeholder="Price" value={form.price} onChange={(e) => setForm((prev) => ({ ...prev, price: Number(e.target.value) }))} required />
         <textarea className="rounded border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm md:col-span-2" placeholder="Full description" value={form.description} onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))} />
         <label className="flex items-center gap-2 text-sm text-zinc-300 md:col-span-2">
           <input type="checkbox" checked={form.isFeatured} onChange={(e) => setForm((prev) => ({ ...prev, isFeatured: e.target.checked }))} />
