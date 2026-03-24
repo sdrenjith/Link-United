@@ -3,24 +3,19 @@ import { motion } from "framer-motion";
 import Container from "../ui/Container";
 import SectionLabel from "../ui/SectionLabel";
 
-// Sourced optimal, high-quality images from the existing assets
-import spices03 from "../../assets/images/spices03.jpg";
-import shipHome01 from "../../assets/images/ship-home01.jpg";
-import spices01 from "../../assets/images/spices01.jpg";
-
 const categories = [
   {
     name: "Vehicles & Machinery",
     tagline: "Heavy equipment, vehicles & industrial machinery for global markets",
     path: "/products/vehicles-machinery",
-    image: "/images/sliders/1774343175331-427782007-commercial.jpg",
+    image: "/images/sliders/1774343175334-145774670-construction.jpg",
     span: "md:col-span-2 md:row-span-2",
   },
   {
     name: "Agro Commodities",
     tagline: "Spices, grains, oils & agricultural raw materials",
     path: "/products/agro-commodities",
-    image: spices03,
+    image: "/images/sliders/1774343175322-490025278-turmeric.jpg",
     span: "",
   },
   {
@@ -34,14 +29,14 @@ const categories = [
     name: "Woods & Wood Products",
     tagline: "Premium timber from certified producers",
     path: "/products/woods-wood-products",
-    image: spices01,
+    image: "/images/sliders/1774343175344-997339250-wood01.jpg",
     span: "",
   },
   {
     name: "General Products",
     tagline: "Consumer electronics, appliances & essentials",
     path: "/products/general",
-    image: shipHome01,
+    image: "/images/sliders/1774343175369-86984862-circuit.jpg",
     span: "",
   },
 ];

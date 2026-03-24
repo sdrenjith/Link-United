@@ -1,5 +1,5 @@
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import Container from "../ui/Container";
 import AnimatedCounter from "../ui/AnimatedCounter";
 import TiltCard from "../ui/TiltCard";
@@ -8,7 +8,7 @@ import GeometricLines from "../ui/GeometricLines";
 /* ── Cargo Ship Scene — placed under the title ────────────── */
 function CargoShipScene({ isInView }: { isInView: boolean }) {
   return (
-    <div className="absolute inset-x-0 bottom-0 h-[450px] sm:h-[550px] md:h-[650px] lg:h-[800px] w-full overflow-hidden pointer-events-none opacity-60 z-0">
+    <div className="absolute inset-x-0 bottom-0 h-[450px] sm:h-[550px] md:h-[650px] lg:h-[800px] w-full overflow-hidden pointer-events-none opacity-60 z-0 hidden lg:block">
       {/* Back Wave */}
       <motion.svg
         viewBox="0 0 1200 120"
@@ -178,6 +178,19 @@ export default function CompanyIntro() {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.15 });
 
+  const [isDesktop, setIsDesktop] = useState(true);
+
+  useEffect(() => {
+    const handleResize = () => setIsDesktop(window.innerWidth >= 1024);
+    handleResize(); // Initial check
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const titleDelay = isDesktop ? 7.5 : 0.2;
+  const bodyDelay = isDesktop ? 7.8 : 0.4;
+  const statEntryDuration = isDesktop ? 7.5 : 1.2;
+
   return (
     <section ref={sectionRef} className="relative z-10 overflow-hidden py-12 md:py-16 lg:py-20">
       <GeometricLines variant="right" opacity={0.6} />
@@ -201,7 +214,7 @@ export default function CompanyIntro() {
             className="hidden lg:col-span-1 lg:flex lg:justify-center"
             initial={{ opacity: 0, x: -30 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ delay: 7.3, duration: 1, ease: "easeOut" }}
+            transition={{ delay: titleDelay - 0.2, duration: 1, ease: "easeOut" }}
           >
             <div className="sticky top-32">
               <p className="font-sans text-xs font-bold uppercase tracking-[0.3em] text-gold-400/80 [writing-mode:vertical-rl] rotate-180 h-48">
@@ -217,28 +230,28 @@ export default function CompanyIntro() {
               className="gold-text font-sans mb-4 text-xs font-bold uppercase tracking-[0.3em] lg:hidden"
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : {}}
-              transition={{ delay: 7.3, duration: 1 }}
+              transition={{ delay: titleDelay - 0.2, duration: 1 }}
             >
               Who We Are
             </motion.p>
 
-            {/* Animated heading (waits for ship front at ~7.5s) */}
+            {/* Animated heading (waits for ship front at ~7.5s on desktop) */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 7.5, duration: 1, ease: "easeOut" }}
+              transition={{ delay: titleDelay, duration: 1, ease: "easeOut" }}
             >
               <h2 className="font-sans text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] xl:text-[3rem] leading-[1.1] font-light tracking-tight text-white">
                 A Global Bridge Between Manufacturers & Markets
               </h2>
             </motion.div>
 
-            {/* Body text (delayed to 7.8s) */}
+            {/* Body text (delayed to 7.8s on desktop) */}
             <motion.div
               className="mt-8 space-y-6 max-w-3xl"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 7.8, duration: 1, ease: "easeOut" }}
+              transition={{ delay: bodyDelay, duration: 1, ease: "easeOut" }}
             >
               <p className="font-body text-base leading-[1.85] text-[#999999]">
                 Constantly innovating and transforming — always with trust and
@@ -306,7 +319,7 @@ export default function CompanyIntro() {
                 },
               ].map((stat, idx) => {
                 const cardShowTimes = [1.3, 3.3, 2.3, 4.3]; // Drops at 0.5, 1.5, 2.5, 3.5 hit the water ~0.8s later
-                const showTime = cardShowTimes[idx];
+                const showTime = isDesktop ? cardShowTimes[idx] : 0.4 + (idx * 0.15);
 
                 // Properly spaced geometry shaping the DOM vertical stack into a 2x2 square during entry
                 const scatterX = ["-48vw", "-22vw", "-48vw", "-22vw"];
@@ -329,9 +342,9 @@ export default function CompanyIntro() {
                      opacity: 1
                    } : {}}
                    transition={{ 
-                     x: { duration: 7.5, times: [0, 6.5/7.5, 1], ease: "easeInOut" },
-                     y: { duration: 7.5, times: [0, 6.5/7.5, 1], ease: "easeInOut" },
-                     scale: { duration: 7.5, times: [0, 6.5/7.5, 1], ease: "easeInOut" },
+                     x: { duration: statEntryDuration, times: [0, 6.5/7.5, 1], ease: "easeInOut" },
+                     y: { duration: statEntryDuration, times: [0, 6.5/7.5, 1], ease: "easeInOut" },
+                     scale: { duration: statEntryDuration, times: [0, 6.5/7.5, 1], ease: "easeInOut" },
                      opacity: { delay: showTime, duration: 0.3, ease: "easeOut" }
                    }}
                  >
