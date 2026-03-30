@@ -2,12 +2,13 @@ import { useState, useEffect, useRef } from "react";
 import api from "../../services/http";
 import { motion, AnimatePresence } from "framer-motion";
 
+/** Display order; `number` is the stored category_number in the API — do not change numbers. */
 const CATEGORIES = [
-  { number: "01", name: "Agro Commodities" },
-  { number: "02", name: "Vehicles & Machinery" },
-  { number: "03", name: "Woods & Wood Products" },
-  { number: "04", name: "Kids Clothing" },
-  { number: "05", name: "General Products" },
+  { number: "01", name: "Agro products" },
+  { number: "04", name: "Kids wear" },
+  { number: "05", name: "General commodities" },
+  { number: "03", name: "Wood & wood furniture" },
+  { number: "02", name: "Vehicle & machinery" },
 ];
 
 export default function SlidersManager() {

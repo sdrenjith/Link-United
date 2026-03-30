@@ -46,7 +46,7 @@ const milestones = [
 const stats = [
   { label: "Countries Served", value: 50, suffix: "+", icon: <GlobeAltIcon className="w-8 h-8 text-gold-400 mb-6" /> },
   { label: "Global Offices", value: 2, suffix: "", icon: <BuildingOffice2Icon className="w-8 h-8 text-gold-400 mb-6" /> },
-  { label: "Product Categories", value: 5, suffix: "+", icon: <CubeIcon className="w-8 h-8 text-gold-400 mb-6" /> },
+  { label: "Product", value: 7000, suffix: "+", icon: <CubeIcon className="w-8 h-8 text-gold-400 mb-6" /> },
 ];
 
 export default function About() {

@@ -17,7 +17,7 @@ const variants: Record<ButtonVariant, string> = {
   primary:
     "bg-gradient-to-r from-gold-400 via-gold-300 to-gold-500 text-dark-400 hover:shadow-[0_0_30px_rgba(201,162,39,0.3)] hover:brightness-110",
   secondary:
-    "border border-gold-400/40 text-gold-300 hover:bg-gold-400/10 hover:border-gold-400/70 hover:shadow-[0_0_20px_rgba(201,162,39,0.12)]",
+    "border border-gold-400/40 gold-text hover:bg-gold-400/10 hover:border-gold-400/70 hover:shadow-[0_0_20px_rgba(201,162,39,0.12)]",
   ghost: "text-zinc-300 hover:text-white hover:bg-white/5",
   danger: "bg-red-600 text-white hover:bg-red-500",
 };

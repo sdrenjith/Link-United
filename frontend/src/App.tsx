@@ -11,6 +11,7 @@ import WoodProducts from "./pages/products/WoodProducts";
 import KidsClothing from "./pages/products/KidsClothing";
 import Media from "./pages/Media";
 import Contact from "./pages/Contact";
+import OurBrands from "./pages/OurBrands";
 import Login from "./pages/admin/Login";
 import Dashboard from "./pages/admin/Dashboard";
 import DashboardHome from "./pages/admin/DashboardHome";
@@ -20,6 +21,7 @@ import SlidersManager from "./pages/admin/SlidersManager";
 import HomeSlidersManager from "./pages/admin/HomeSlidersManager";
 import AnnouncementsManager from "./pages/admin/AnnouncementsManager";
 import EnquiriesPage from "./pages/admin/EnquiriesPage";
+import ChangePassword from "./pages/admin/ChangePassword";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -44,6 +46,7 @@ function App() {
         <Route path="home-sliders" element={<HomeSlidersManager />} />
         <Route path="announcements" element={<AnnouncementsManager />} />
         <Route path="enquiries" element={<EnquiriesPage />} />
+        <Route path="change-password" element={<ChangePassword />} />
       </Route>
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
@@ -55,6 +58,7 @@ function App() {
         <Route path="/products/vehicles-machinery" element={<VehiclesMachinery />} />
         <Route path="/products/woods-wood-products" element={<WoodProducts />} />
         <Route path="/products/kids-clothing" element={<KidsClothing />} />
+        <Route path="/our-brands" element={<OurBrands />} />
         <Route path="/media" element={<Media />} />
         <Route path="/contact" element={<Contact />} />
       </Route>

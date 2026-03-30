@@ -36,6 +36,44 @@ const getProducts = asyncHandler(async (req, res) => {
   res.status(200).json({ items: response.rows.map(mapProduct) });
 });
 
+const escapeILike = (raw) =>
+  String(raw)
+    .replace(/\\/g, "\\\\")
+    .replace(/%/g, "\\%")
+    .replace(/_/g, "\\_");
+
+const mapSearchHit = (row) => ({
+  id: row.id,
+  name: row.name,
+  category: row.category,
+  subCategory: row.sub_category,
+  shortDescription: row.short_description,
+  imageUrl: row.image_url,
+});
+
+const searchProducts = asyncHandler(async (req, res) => {
+  const raw = typeof req.query.q === "string" ? req.query.q.trim() : "";
+  if (raw.length === 0) {
+    return res.status(200).json({ items: [] });
+  }
+
+  const pattern = `%${escapeILike(raw)}%`;
+  const query = `
+    SELECT id, name, category, sub_category, short_description, image_url
+    FROM products
+    WHERE
+      name ILIKE $1 ESCAPE '\\'
+      OR category ILIKE $1 ESCAPE '\\'
+      OR COALESCE(sub_category, '') ILIKE $1 ESCAPE '\\'
+      OR COALESCE(short_description, '') ILIKE $1 ESCAPE '\\'
+      OR COALESCE(description, '') ILIKE $1 ESCAPE '\\'
+    ORDER BY name ASC
+    LIMIT 18
+  `;
+  const response = await pool.query(query, [pattern]);
+  return res.status(200).json({ items: response.rows.map(mapSearchHit) });
+});
+
 const getProductById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const response = await pool.query("SELECT * FROM products WHERE id = $1", [id]);
@@ -135,6 +173,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
 
 module.exports = {
   getProducts,
+  searchProducts,
   getProductById,
   createProduct,
   updateProduct,

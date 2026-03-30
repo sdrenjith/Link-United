@@ -15,54 +15,54 @@ import spices01 from "../../assets/images/spices01.jpg";
 const tabs = [
   {
     id: "transport",
-    label: "Transport",
+    label: "Import",
     icon: (
       <svg className="w-6 h-6 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
       </svg>
     ),
-    title: "Global Transportation Services",
-    body: "Ensure your cargo reaches its destination efficiently. From ocean and air freight to comprehensive inland transport, we provide flexible, reliable routing designed around your timeline and budget.",
-    features: ["Ocean Freight (FCL & LCL)", "Air Freight Solutions", "Inland Road & Rail", "End-to-End Tracking"],
+    title: "Global Import Operations",
+    body: "We manage compliant and efficient inbound trade flows from international suppliers to your destination markets, with complete visibility from origin to delivery.",
+    features: ["Supplier-to-Port Coordination", "Customs Documentation Support", "Inbound Cargo Handling", "Import Compliance Tracking"],
     image: shipHome01
   },
   {
     id: "store",
-    label: "Store",
+    label: "Export",
     icon: (
       <svg className="w-6 h-6 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
       </svg>
     ),
-    title: "Warehousing & Storage",
-    body: "Strategically located warehousing facilities across key global markets to securely store, manage, and distribute your goods with maximum efficiency.",
-    features: ["Bonded Warehousing", "Inventory Management", "Pick & Pack Services", "Cross-Docking"],
+    title: "Export Execution Services",
+    body: "From order confirmation to shipment dispatch, we execute structured export operations that help businesses reach global buyers with speed and reliability.",
+    features: ["Export Order Processing", "Shipping & Forwarding Setup", "Trade Documentation Control", "Destination Delivery Coordination"],
     image: exporting01
   },
   {
     id: "management",
-    label: "Logistics Management",
+    label: "Wholesale",
     icon: (
       <svg className="w-6 h-6 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
       </svg>
     ),
-    title: "Supply Chain Solutions",
-    body: "Comprehensive 4PL and supply chain management. We optimize your entire logistics operations, providing data-driven insights and end-to-end visibility.",
-    features: ["Supply Chain Design", "4PL Services", "Data & Analytics", "Order Management"],
+    title: "Wholesale Distribution",
+    body: "We support bulk procurement and high-volume distribution models for importers, distributors, and institutional buyers across multiple international markets.",
+    features: ["Bulk Sourcing Programs", "B2B Distribution Support", "Contract Volume Fulfillment", "Multi-Market Supply Planning"],
     image: exporting02
   },
   {
     id: "solutions",
-    label: "Solutions",
+    label: "Retail",
     icon: (
       <svg className="w-6 h-6 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
       </svg>
     ),
-    title: "Industry-Specific Solutions",
-    body: "Tailored logistics approaches for specialized industries. Whether you're moving perishables, heavy machinery, or retail goods, we have the expertise to execute.",
-    features: ["Agro & Perishables", "Automotive & Machinery", "Retail & FMCG", "Wood & Renewables"],
+    title: "Retail Supply Solutions",
+    body: "We help retail partners maintain availability, quality, and shelf-readiness through dependable replenishment cycles and market-responsive supply operations.",
+    features: ["Retail-Ready Product Flow", "Store Replenishment Planning", "Seasonal Demand Support", "Consistent Quality Assurance"],
     image: spices01
   }
 ];

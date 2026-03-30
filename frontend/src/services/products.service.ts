@@ -3,10 +3,26 @@ import type { Product, ProductCategory } from "../types/api";
 
 export type ProductPayload = Omit<Product, "id" | "createdAt" | "updatedAt">;
 
+export interface ProductSearchHit {
+  id: number;
+  name: string;
+  category: ProductCategory;
+  subCategory?: string;
+  shortDescription: string;
+  imageUrl: string;
+}
+
 export const productsService = {
   list: async (category?: ProductCategory) => {
     const { data } = await api.get<{ items: Product[] }>("/products", {
       params: category ? { category } : undefined,
+    });
+    return data.items;
+  },
+  search: async (q: string, signal?: AbortSignal) => {
+    const { data } = await api.get<{ items: ProductSearchHit[] }>("/products/search", {
+      params: { q },
+      signal,
     });
     return data.items;
   },

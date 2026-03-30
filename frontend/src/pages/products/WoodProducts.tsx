@@ -7,6 +7,7 @@ import ScrollReveal from "../../components/ui/ScrollReveal";
 import GoldButton from "../../components/ui/GoldButton";
 import { productsService } from "../../services/products.service";
 import type { Product } from "../../types/api";
+import { useScrollToProductHash } from "../../hooks/useScrollToProductHash";
 
 const woodTypes = [
   "Construction Timber",
@@ -18,6 +19,7 @@ const woodTypes = [
 ];
 
 export default function WoodProducts() {
+  useScrollToProductHash();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -38,7 +40,7 @@ export default function WoodProducts() {
     <>
       <PageHero
         eyebrow="Product Category"
-        title="Woods & Wood Products"
+        title="Wood & wood furniture"
         description="Premium timber sourced from certified global producers."
       />
 
@@ -73,6 +75,7 @@ export default function WoodProducts() {
             <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {products.map((product, i) => (
                 <motion.div
+                  id={`product-${product.id}`}
                   key={product.id}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -96,7 +99,7 @@ export default function WoodProducts() {
 
           <div className="mt-16 text-center">
             <Link to="/contact">
-              <GoldButton>Enquire About Wood Products</GoldButton>
+              <GoldButton>Enquire about wood &amp; wood furniture</GoldButton>
             </Link>
           </div>
         </Container>

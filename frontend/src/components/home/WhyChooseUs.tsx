@@ -234,7 +234,7 @@ export default function WhyChooseUs() {
                     className="absolute inset-0 flex flex-col justify-center"
                   >
                     <div className="flex items-start gap-3 sm:gap-4 md:gap-6">
-                      <span className="font-sans text-sm font-bold text-gold-400 mt-1 sm:mt-2 tracking-[0.1em]">
+                      <span className="gold-text font-sans text-sm font-bold mt-1 sm:mt-2 tracking-[0.1em]">
                         {items[activeIndex].number}
                       </span>
                       <div>

@@ -20,7 +20,7 @@ export default function PageTransition({ children }: PropsWithChildren) {
         exit={{ scaleX: [0, 1, 1, 0], transition: { duration: 0.8, times: [0, 0.4, 0.6, 1] } }}
         style={{ originX: 0 }}
       >
-        <div className="h-full w-full bg-gradient-to-r from-gold-400/20 via-gold-200/30 to-gold-400/20" />
+        <div className="h-full w-full bg-gradient-to-r from-gold-400/20 via-gold-400/25 to-gold-400/20" />
       </motion.div>
     </>
   );

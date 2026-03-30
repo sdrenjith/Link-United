@@ -16,14 +16,14 @@ const slides = [
     eyebrow: "LINK UNITED INTERNATIONAL",
     title: "Connecting Global Trade with Trust",
     highlight: "Trade with Trust",
-    subtitle: "Connecting with signature of trust across 50+ countries worldwide.",
+    subtitle: "Global reach and trusted partnerships across 50+ countries worldwide.",
   },
   {
     id: 2,
     image: bgSpices,
     eyebrow: "QUALITY SOURCING",
-    title: "Premium Agro Commodities",
-    highlight: "Commodities",
+    title: "Premium agro products",
+    highlight: "Agro products",
     subtitle: "Sourcing the highest quality spices, grains, and agricultural materials for international markets.",
   },
   {
@@ -146,12 +146,11 @@ export default function Hero() {
         </motion.div>
       </AnimatePresence>
 
-      {/* Dark Overlay for Text Contrast */}
-      <div className="absolute inset-0 z-[1] bg-black/60" />
+      {/* Dark overlay — very light at top so a transparent menubar shows the photo, not a black band */}
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-black/10 via-black/35 to-black/65" />
 
-      {/* Overlay Gradients */}
       <div className="pointer-events-none absolute inset-0 z-[2]">
-        <div className="absolute inset-x-0 top-0 h-[40%] bg-gradient-to-b from-[#080808]/80 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-[min(22vh,160px)] bg-gradient-to-b from-[#080808]/18 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-[40%] bg-gradient-to-t from-[#080808] to-transparent" />
       </div>
 
@@ -166,7 +165,7 @@ export default function Hero() {
       />
 
       {/* CONTENT */}
-      <div className="relative z-10 flex h-full flex-col items-center justify-center pt-16">
+      <div className="relative z-10 flex h-full flex-col items-center justify-center pt-12 md:pt-14">
         <Container>
           <div className="mx-auto max-w-6xl text-center">
             <AnimatePresence mode="wait">
@@ -182,7 +181,7 @@ export default function Hero() {
                   {slideText.eyebrow}
                 </p>
 
-                <h1 className="font-sans text-3xl font-semibold leading-tight text-white md:text-5xl lg:text-6xl md:whitespace-nowrap px-4" style={{ letterSpacing: "-0.01em" }}>
+                <h1 className="font-sans max-w-4xl text-3xl font-semibold leading-tight text-white md:text-5xl lg:text-6xl px-4 text-balance" style={{ letterSpacing: "-0.01em" }}>
                   {renderTitle(slideText.title, slideText.highlight)}
                 </h1>
 
@@ -200,9 +199,6 @@ export default function Hero() {
             >
               <Link to="/services">
                 <GoldButton variant="filled">Explore Our Services</GoldButton>
-              </Link>
-              <Link to="/contact">
-                <GoldButton variant="ghost">Get In Touch</GoldButton>
               </Link>
             </motion.div>
           </div>

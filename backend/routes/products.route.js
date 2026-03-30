@@ -4,6 +4,7 @@ const { authMiddleware, requireRole } = require("../middleware/auth.middleware")
 const validate = require("../middleware/validate.middleware");
 const {
   getProducts,
+  searchProducts,
   getProductById,
   createProduct,
   updateProduct,
@@ -11,6 +12,7 @@ const {
 } = require("../controllers/products.controller");
 const { createProductSchema, updateProductSchema } = require("../validators/product.validator");
 
+router.get("/search", searchProducts);
 router.get("/", getProducts);
 router.get("/:id", getProductById);
 router.post("/", authMiddleware, requireRole(["admin"]), validate(createProductSchema), createProduct);

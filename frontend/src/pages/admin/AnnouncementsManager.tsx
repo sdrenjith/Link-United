@@ -93,10 +93,10 @@ export default function AnnouncementsManager() {
     <div className="max-w-6xl mx-auto space-y-8">
       <div>
         <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-3">
-          Site Notifications
+          Announcements
         </h1>
         <p className="mt-2 text-sm text-zinc-400 max-w-2xl">
-          Control the scrolling notifications ticker floating across the homepage. You can attach tiny logos to accompany the titles.
+          Manage the scrolling announcements bar on the homepage. Optional small logos can appear next to each title.
         </p>
       </div>
 
@@ -105,7 +105,7 @@ export default function AnnouncementsManager() {
         {/* Creation Form */}
         <div className="space-y-4">
           <form onSubmit={handleSave} className="p-6 rounded-xl border border-white/10 bg-white/[0.02] backdrop-blur-md sticky top-6 space-y-5">
-            <h3 className="text-sm font-semibold text-white">Create New Item</h3>
+            <h3 className="text-sm font-semibold text-white">New announcement</h3>
             
             <div className="space-y-2">
               <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Display Title</label>
@@ -125,7 +125,7 @@ export default function AnnouncementsManager() {
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 className="w-full h-24 bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-gold-500/50 resize-none transition-colors"
-                placeholder="Visible only when a user hovers over the ticker item..."
+                placeholder="Visible when a visitor hovers an announcement..."
               />
             </div>
 
@@ -169,14 +169,14 @@ export default function AnnouncementsManager() {
             </div>
 
             <Button type="submit" disabled={isSaving || isUploading} className="w-full mt-4">
-              {isSaving ? "Saving..." : "Add to Marquee"}
+              {isSaving ? "Saving..." : "Add announcement"}
             </Button>
           </form>
         </div>
 
         {/* Existing Items List */}
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-zinc-200">Active Marquee Tape</h2>
+          <h2 className="text-lg font-semibold text-zinc-200">Active announcements</h2>
           
           {isLoading ? (
             <div className="h-64 flex items-center justify-center border border-dashed border-white/10 rounded-xl bg-white/[0.01]">
@@ -221,7 +221,7 @@ export default function AnnouncementsManager() {
 
               {announcements.length === 0 && (
                 <div className="h-32 flex flex-col items-center justify-center border border-dashed border-white/10 rounded-xl text-zinc-500 text-sm">
-                  No marquee items exist yet. Add one!
+                  No announcements yet. Add one above.
                 </div>
               )}
             </div>

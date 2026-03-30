@@ -5,38 +5,39 @@ import SectionLabel from "../ui/SectionLabel";
 
 const categories = [
   {
-    name: "Vehicles & Machinery",
-    tagline: "Heavy equipment, vehicles & industrial machinery for global markets",
-    path: "/products/vehicles-machinery",
-    image: "/images/sliders/1774343175334-145774670-construction.jpg",
+    name: "Agro products",
+    tagline: "Spices, grains, oils & agricultural raw materials",
+    path: "/products/agro-commodities",
+    image:
+      "/images/sliders/1774380943438-599848550-an-array-of-colorful-sacks-filled-with-various-exotic-spices-is-beautifully-arranged-at-a-market-in-morocco-showcasing-the-rich-culinary-traditions-of-the-region-adsf55984.jpg",
     span: "md:col-span-2 md:row-span-2",
   },
   {
-    name: "Agro Commodities",
-    tagline: "Spices, grains, oils & agricultural raw materials",
-    path: "/products/agro-commodities",
-    image: "/images/sliders/1774343175322-490025278-turmeric.jpg",
-    span: "",
-  },
-  {
-    name: "Kids Clothing",
+    name: "Kids wear",
     tagline: "Quality children's apparel for international retail",
     path: "/products/kids-clothing",
-    image: "/images/sliders/1774343175357-18293185-kids01.jpg",
+    image: "/images/sliders/1774343175364-453848313-kids04.jpg",
     span: "",
   },
   {
-    name: "Woods & Wood Products",
-    tagline: "Premium timber from certified producers",
-    path: "/products/woods-wood-products",
-    image: "/images/sliders/1774343175344-997339250-wood01.jpg",
-    span: "",
-  },
-  {
-    name: "General Products",
+    name: "General commodities",
     tagline: "Consumer electronics, appliances & essentials",
     path: "/products/general",
-    image: "/images/sliders/1774343175369-86984862-circuit.jpg",
+    image: "/images/sliders/1774379573204-601958208-shopping--1-.webp",
+    span: "",
+  },
+  {
+    name: "Wood & wood furniture",
+    tagline: "Premium timber from certified producers",
+    path: "/products/woods-wood-products",
+    image: "/images/sliders/1774343175352-346877260-wood04.jpg",
+    span: "",
+  },
+  {
+    name: "Vehicle & machinery",
+    tagline: "Heavy equipment, vehicles & industrial machinery for global markets",
+    path: "/products/vehicles-machinery",
+    image: "/images/sliders/1774378795655-433500548-images-car-1.jpeg",
     span: "",
   },
 ];
@@ -92,7 +93,7 @@ export default function ProductCategories() {
                   <p className="font-sans mt-2 text-sm text-zinc-400 transition-transform duration-500 group-hover:-translate-y-1">
                     {cat.tagline}
                   </p>
-                  <span className="mt-4 block translate-y-4 text-xs font-semibold uppercase tracking-[0.15em] text-gold-200 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+                  <span className="mt-4 block translate-y-4 text-xs font-semibold uppercase tracking-[0.15em] gold-text opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
                     Explore &rarr;
                   </span>
                 </div>

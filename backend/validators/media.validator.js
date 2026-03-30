@@ -1,10 +1,18 @@
 const { z } = require("zod");
 
+// imageUrl is often a site-relative path from upload (e.g. /images/media/...) — not a full URL
+const imageUrlSchema = z
+  .string()
+  .min(1)
+  .refine((s) => s.startsWith("/") || /^https?:\/\//i.test(s), {
+    message: "imageUrl must be a path starting with / or a full http(s) URL",
+  });
+
 const mediaPayload = z.object({
   title: z.string().min(5).max(180),
-  summary: z.string().min(20).max(300),
-  content: z.string().min(30).max(5000),
-  imageUrl: z.string().url(),
+  summary: z.string().max(300).optional(),
+  content: z.string().max(5000).optional(),
+  imageUrl: imageUrlSchema,
   publishedAt: z.string().datetime().optional(),
 });
 

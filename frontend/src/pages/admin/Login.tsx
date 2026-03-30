@@ -58,7 +58,11 @@ function Login() {
         <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 sm:p-10 backdrop-blur-2xl shadow-[0_0_80px_rgba(0,0,0,0.8)]">
           <div className="mb-10 text-center">
             <div className="mb-4 flex justify-center">
-              <img src="/logo.png" alt="Link United" className="h-[4.5rem] w-auto object-contain" />
+              <img
+                src="/logo.png"
+                alt="Link United"
+                className="h-32 w-auto max-w-full object-contain sm:h-36 md:h-40 lg:h-44"
+              />
             </div>
             <p className="font-sans text-[10px] uppercase tracking-[0.25em] text-zinc-500">
               Admin Portal Area

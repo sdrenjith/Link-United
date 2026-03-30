@@ -7,6 +7,7 @@ import ScrollReveal from "../../components/ui/ScrollReveal";
 import GoldButton from "../../components/ui/GoldButton";
 import { productsService } from "../../services/products.service";
 import type { Product } from "../../types/api";
+import { useScrollToProductHash } from "../../hooks/useScrollToProductHash";
 
 const subcategories = [
   "Mechanical Products",
@@ -20,6 +21,7 @@ const subcategories = [
 ];
 
 export default function GeneralProducts() {
+  useScrollToProductHash();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -40,7 +42,7 @@ export default function GeneralProducts() {
     <>
       <PageHero
         eyebrow="Product Category"
-        title="General Products"
+        title="General commodities"
         description="Consumer electronics, appliances, and industrial essentials for global markets."
       />
 
@@ -78,6 +80,7 @@ export default function GeneralProducts() {
             <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {products.map((product, i) => (
                 <motion.div
+                  id={`product-${product.id}`}
                   key={product.id}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -108,7 +111,7 @@ export default function GeneralProducts() {
 
           <div className="mt-16 text-center">
             <Link to="/contact">
-              <GoldButton>Enquire About General Products</GoldButton>
+              <GoldButton>Enquire about general commodities</GoldButton>
             </Link>
           </div>
         </Container>

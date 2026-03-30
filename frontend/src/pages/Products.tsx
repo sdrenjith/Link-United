@@ -14,7 +14,9 @@ import type { Product, ProductCategory } from "../types/api";
 const categoryDetails = [
   {
     number: "01",
-    name: "Agro Commodities",
+    /** Matches `category_number` in product_sliders (unchanged when reordering list). */
+    sliderCategoryNumber: "01",
+    name: "Agro products",
     path: "/products/agro-commodities",
     description:
       "As a leading trader of agro-commodities with a firm foothold in global markets, we execute trade in raw, semi-processed, and ready-to-use agricultural products across the USA, UK, Europe, and Africa.",
@@ -29,37 +31,8 @@ const categoryDetails = [
   },
   {
     number: "02",
-    name: "Vehicles & Machinery",
-    path: "/products/vehicles-machinery",
-    description:
-      "Powering progress and driving innovation across emerging and established economies. Acting as a strategic bridge between world-class manufacturers and high-growth industries, we supply the heavy-duty machinery and commercial vehicle fleets required to scale operations efficiently.",
-    features: [
-      "Earthmoving & Construction Equipment",
-      "Agricultural & Farming Machinery",
-      "Heavy-Duty Commercial Trucks & Trailers",
-      "Material Handling & Logistics Vehicles",
-      "Mining, Drilling & Resource Extraction Tech",
-      "Industrial Processing & Manufacturing Lines",
-    ],
-  },
-  {
-    number: "03",
-    name: "Woods & Wood Products",
-    path: "/products/woods-wood-products",
-    description:
-      "We specialise in sourcing the finest quality timber from Canada, Africa, Europe, and the USA — serving the housing, construction, furniture, handicrafts, pulp & paper, and hospitality industries.",
-    features: [
-      "Construction & Structural Timber",
-      "Furniture-Grade Hardwoods",
-      "Plywood & Engineered Wood",
-      "Decking & Flooring",
-      "Paper & Pulp Grade Wood",
-      "Certified Sustainable Sources",
-    ],
-  },
-  {
-    number: "04",
-    name: "Kids Clothing",
+    sliderCategoryNumber: "04",
+    name: "Kids wear",
     path: "/products/kids-clothing",
     description:
       "Operating from the United Kingdom, we specialize in the global import and export of premium children's apparel. We seamlessly connect trusted manufacturers with international retailers, delivering stylish, comfortable, and rigorously tested kidswear through a highly transparent supply chain.",
@@ -73,8 +46,9 @@ const categoryDetails = [
     ],
   },
   {
-    number: "05",
-    name: "General Products",
+    number: "03",
+    sliderCategoryNumber: "05",
+    name: "General commodities",
     path: "/products/general",
     description:
       "The global appliances and consumer electronics market continues to expand. We export a comprehensive range of modern products — from mechanical and industrial components to consumer lifestyle goods.",
@@ -85,6 +59,38 @@ const categoryDetails = [
       "Garment Care & Grooming",
       "Temperature Control & HVAC",
       "Circuit Protection & Industrial Cables",
+    ],
+  },
+  {
+    number: "04",
+    sliderCategoryNumber: "03",
+    name: "Wood & wood furniture",
+    path: "/products/woods-wood-products",
+    description:
+      "We specialise in sourcing the finest quality timber from Canada, Africa, Europe, and the USA — serving the housing, construction, furniture, handicrafts, pulp & paper, and hospitality industries.",
+    features: [
+      "Construction & Structural Timber",
+      "Furniture-Grade Hardwoods",
+      "Plywood & Engineered Wood",
+      "Decking & Flooring",
+      "Paper & Pulp Grade Wood",
+      "Certified Sustainable Sources",
+    ],
+  },
+  {
+    number: "05",
+    sliderCategoryNumber: "02",
+    name: "Vehicle & machinery",
+    path: "/products/vehicles-machinery",
+    description:
+      "Powering progress and driving innovation across emerging and established economies. Acting as a strategic bridge between world-class manufacturers and high-growth industries, we supply the heavy-duty machinery and commercial vehicle fleets required to scale operations efficiently.",
+    features: [
+      "Earthmoving & Construction Equipment",
+      "Agricultural & Farming Machinery",
+      "Heavy-Duty Commercial Trucks & Trailers",
+      "Material Handling & Logistics Vehicles",
+      "Mining, Drilling & Resource Extraction Tech",
+      "Industrial Processing & Manufacturing Lines",
     ],
   },
 ];
@@ -214,7 +220,7 @@ export default function Products() {
               className={`rounded-full px-5 py-2 text-xs font-semibold uppercase tracking-wider transition-all duration-300 ${
                 !category
                   ? "bg-gradient-to-r from-gold-200 to-gold-500 text-dark-600 shadow-[0_0_20px_rgba(201,151,58,0.2)]"
-                  : "border border-zinc-700/60 text-zinc-400 hover:border-gold-400/40 hover:text-gold-200"
+                  : "border border-zinc-700/60 text-zinc-400 hover:border-gold-400/40 hover:text-gold-400"
               }`}
               onClick={() => setSearchParams({})}
             >
@@ -226,7 +232,7 @@ export default function Products() {
                 className={`rounded-full px-5 py-2 text-xs font-semibold uppercase tracking-wider transition-all duration-300 ${
                   category === item.key
                     ? "bg-gradient-to-r from-gold-200 to-gold-500 text-dark-600 shadow-[0_0_20px_rgba(201,151,58,0.2)]"
-                    : "border border-zinc-700/60 text-zinc-400 hover:border-gold-400/40 hover:text-gold-200"
+                    : "border border-zinc-700/60 text-zinc-400 hover:border-gold-400/40 hover:text-gold-400"
                 }`}
                 onClick={() => setSearchParams({ category: item.key })}
               >
@@ -246,19 +252,19 @@ export default function Products() {
               <button
                 className={`rounded border px-4 py-1.5 text-xs transition-all duration-300 ${
                   activeSubCategory === null
-                    ? "border-gold-400/50 bg-gold-400/10 text-gold-300"
+                    ? "border-gold-400/50 bg-gold-400/10 gold-text"
                     : "border-zinc-800 bg-zinc-950 text-zinc-400 hover:border-zinc-600 hover:text-zinc-200"
                 }`}
                 onClick={() => setActiveSubCategory(null)}
               >
-                {category === "kids-clothing" ? "All Kids Clothing" : "All Agro Products"}
+                {category === "kids-clothing" ? "All kids wear" : "All agro products"}
               </button>
               {availableSubCategories.map((sub) => (
                 <button
                   key={sub}
                   className={`rounded border px-4 py-1.5 text-xs transition-all duration-300 ${
                     activeSubCategory === sub
-                      ? "border-gold-400/50 bg-gold-400/10 text-gold-300"
+                      ? "border-gold-400/50 bg-gold-400/10 gold-text"
                       : "border-zinc-800 bg-zinc-950 text-zinc-400 hover:border-zinc-600 hover:text-zinc-200"
                   }`}
                   onClick={() => setActiveSubCategory(sub)}
@@ -275,18 +281,9 @@ export default function Products() {
             </div>
           )}
 
-          {!loading && displayedProducts.length === 0 && (
-            <div className="glass rounded-2xl px-8 py-16 text-center">
-              <p className="text-lg text-[#888888]">
-                No products available for this selection. Products will appear
-                here once added through the admin dashboard.
-              </p>
-            </div>
-          )}
-
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <AnimatePresence mode="popLayout">
-              {displayedProducts.map((product, i) => (
+              {displayedProducts.map((product) => (
                 <motion.div
                   key={product.id}
                   layout
@@ -335,7 +332,9 @@ export default function Products() {
           <div className="space-y-28 mt-20">
             {categoryDetails.map((cat, i) => {
               // Extract dynamic images for this category
-              const categoryDynamicSliders = dynamicSliders.filter(s => s.categoryNumber === cat.number);
+              const categoryDynamicSliders = dynamicSliders.filter(
+                (s) => s.categoryNumber === cat.sliderCategoryNumber,
+              );
               const activeImages = categoryDynamicSliders.map(s => s.imageUrl);
 
               return (

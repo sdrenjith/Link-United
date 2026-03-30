@@ -61,4 +61,24 @@ const me = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = { login, me };
+const changePassword = asyncHandler(async (req, res) => {
+  const { currentPassword, newPassword } = req.validated.body;
+  const userId = req.user.sub;
+
+  const result = await pool.query("SELECT password FROM users WHERE id = $1 LIMIT 1", [userId]);
+  const row = result.rows[0];
+  if (!row) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
+  if (!(await isPasswordValid(currentPassword, row.password))) {
+    return res.status(401).json({ message: "Current password is incorrect." });
+  }
+
+  const hashed = await bcrypt.hash(newPassword, 10);
+  await pool.query("UPDATE users SET password = $1 WHERE id = $2", [hashed, userId]);
+
+  return res.status(200).json({ message: "Password updated successfully." });
+});
+
+module.exports = { login, me, changePassword };

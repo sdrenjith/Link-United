@@ -25,7 +25,7 @@ const createMediaPost = asyncHandler(async (req, res) => {
       VALUES ($1, $2, $3, $4, COALESCE($5::timestamptz, NOW()))
       RETURNING *
     `,
-    [title, summary, content, imageUrl, publishedAt || null],
+    [title, summary ?? "", content ?? "", imageUrl, publishedAt || null],
   );
 
   return res.status(201).json({

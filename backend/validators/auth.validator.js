@@ -9,4 +9,15 @@ const loginSchema = z.object({
   params: z.object({}).optional(),
 });
 
-module.exports = { loginSchema };
+const changePasswordSchema = z.object({
+  body: z
+    .object({
+      currentPassword: z.string().min(1, "Current password is required."),
+      newPassword: z.string().min(8, "New password must be at least 8 characters."),
+    })
+    .strict(),
+  query: z.object({}).optional(),
+  params: z.object({}).optional(),
+});
+
+module.exports = { loginSchema, changePasswordSchema };

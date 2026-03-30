@@ -61,7 +61,8 @@ function CargoShipScene({ isInView }: { isInView: boolean }) {
             fontFamily="'Fredoka', 'Quicksand', 'Varela Round', system-ui, sans-serif"
             letterSpacing="-1"
           >
-            <tspan>Link</tspan><tspan fill="rgba(201,151,58,0.95)">United</tspan>
+            <tspan>Link </tspan>
+            <tspan fill="rgba(201,151,58,0.95)">United</tspan>
           </text>
           <text
             x="214"
@@ -242,7 +243,7 @@ export default function CompanyIntro() {
               transition={{ delay: titleDelay, duration: 1, ease: "easeOut" }}
             >
               <h2 className="font-sans text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] xl:text-[3rem] leading-[1.1] font-light tracking-tight text-white">
-                A Global Bridge Between Manufacturers & Markets
+                A Global Bridge Between Manufacturers and Markets
               </h2>
             </motion.div>
 
@@ -288,8 +289,8 @@ export default function CompanyIntro() {
                   ),
                 },
                 {
-                  label: "Product Categories",
-                  value: 5,
+                  label: "Products",
+                  value: 7000,
                   suffix: "+",
                   icon: (
                     <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

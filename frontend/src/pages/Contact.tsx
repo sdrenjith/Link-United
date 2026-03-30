@@ -73,7 +73,7 @@ const offices = [
     city: "London",
     country: "United Kingdom",
     entity: "LiNK UNITED INTERNATIONAL LIMITED",
-    address: "66 Paul Street, London EC2A 4NE",
+    address: "66, Paul Street\nLondon, UK\nEC2A 4NE",
     email: "info@linkunited.co.uk",
     // Coordinates for London embed
     embedMap: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2482.5204781449336!2d-0.0863920230554238!3d51.521998509635!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48761cafcc16ffef%3A0xe5a3c9df9f52e3c!2s66%20Paul%20St%2C%20London%20EC2A%204NE%2C%20UK!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus"
@@ -82,7 +82,7 @@ const offices = [
     city: "Houston",
     country: "United States",
     entity: "LiNK UNITED INTERNATIONAL INC.",
-    address: "700 Louisiana Street, Suite 3950, Houston TX 77002",
+    address: "700, Louisiana Street, Suite 3950\nHouston, Texas, USA\n77002",
     email: "info@linkunited.co.uk",
     // Coordinates for Houston embed
     embedMap: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3463.7431289197607!2d-95.36972742368945!3d29.756111075069418!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8640bf38f8045d4d%3A0xc6cb1c4918f4a3de!2s700%20Louisiana%20St%20Suite%203950%2C%20Houston%2C%20TX%2077002!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus"
@@ -140,16 +140,16 @@ export default function Contact() {
             transition={{ delay: 0.6, duration: 1.2, ease: "easeOut" }}
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-tight leading-[1.1] mb-8"
           >
-            Connect <span className="text-white font-medium">With Us</span>
+            Contact <span className="text-white font-medium">Us</span>
           </motion.h1>
           
           <motion.p 
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
             transition={{ delay: 1.2, duration: 1 }}
-            className="text-zinc-400 text-lg md:text-xl font-body max-w-2xl mx-auto leading-relaxed"
+            className="mx-auto max-w-3xl text-pretty font-body text-base leading-relaxed text-zinc-400 sm:text-[17px] md:text-lg"
           >
-            Share your strategic sourcing requirements with our executive leadership team and receive a highly engineered international trade plan.
+            Share your strategic sourcing requirements with our executive leadership team and receive a clear international trade plan.
           </motion.p>
         </div>
       </section>
@@ -208,7 +208,7 @@ export default function Contact() {
                       
                       <div className="flex items-start gap-4 group">
                         <MapPinIcon className="w-5 h-5 text-zinc-600 mt-1 shrink-0 group-hover:text-gold-400 transition-colors" />
-                        <p className="text-sm font-body text-zinc-400 leading-relaxed group-hover:text-zinc-300 transition-colors">
+                        <p className="whitespace-pre-line text-sm font-body text-zinc-400 leading-relaxed group-hover:text-zinc-300 transition-colors">
                           {offices[activeOffice].address}
                         </p>
                       </div>
@@ -269,40 +269,42 @@ export default function Contact() {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                       </svg>
                     </motion.div>
-                    <h3 className="text-3xl font-light text-white mb-4 tracking-tight">Transmission Secured</h3>
+                    <h3 className="text-3xl font-light text-white mb-4 tracking-tight">Thank you</h3>
                     <p className="text-lg text-zinc-500 mb-12 font-body max-w-md mx-auto">
-                      Your strategic requirements have been routed to our executive team. They will audit your perimeter and contact you within 24 business hours.
+                      We've received your message. Our team will get back to you within 24 business hours.
                     </p>
                     <GoldButton onClick={() => setSubmitted(false)}>
-                      INITIATE ANOTHER ENQUIRY
+                      Send another message
                     </GoldButton>
                   </div>
                 ) : (
                   <>
                     <div className="mb-12">
-                      <h2 className="text-3xl md:text-4xl font-light text-white mb-4 tracking-tight">Direct Transmission</h2>
-                      <p className="text-sm font-body text-zinc-500 leading-relaxed">Secure communication channel to Line United global directors.</p>
+                      <h2 className="text-3xl md:text-4xl font-light text-white mb-4 tracking-tight">Contact us</h2>
+                      <p className="text-sm font-body text-zinc-500 leading-relaxed">
+                        Send us your enquiry using the form below ..
+                      </p>
                     </div>
                     
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
                       <div className="grid gap-x-12 gap-y-10 md:grid-cols-2">
                         <FloatingInput
-                          label="Full Name / Representative *"
+                          label="Full Name *"
                           error={errors.name?.message}
                           {...register("name")}
                         />
                         <FloatingInput
-                          label="Corporate Entity / Company *"
+                          label="Corporate / Company *"
                           error={errors.company?.message}
                           {...register("company")}
                         />
                         <FloatingInput
-                          label="Secure Email Address *"
+                          label="Email Address *"
                           error={errors.email?.message}
                           {...register("email")}
                         />
                         <FloatingInput
-                          label="Direct Phone Line *"
+                          label="Phone *"
                           error={errors.phone?.message}
                           {...register("phone")}
                         />
@@ -311,7 +313,7 @@ export default function Contact() {
                       <div className="pt-4">
                         <FloatingInput
                           type="textarea"
-                          label="Strategic Requirements & Trade Details *"
+                          label="Requirements & Trade Details *"
                           rows={4}
                           error={errors.message?.message}
                           {...register("message")}
@@ -320,7 +322,7 @@ export default function Contact() {
 
                       <div className="pt-8">
                         <GoldButton disabled={isSubmitting} type="submit" fullWidth className="py-5 text-sm">
-                          {isSubmitting ? "TRANSMITTING DATA..." : "AUTHORIZE TRANSMISSION"}
+                          {isSubmitting ? "SUBMITTING DATA..." : "SUBMIT"}
                         </GoldButton>
                       </div>
                     </form>

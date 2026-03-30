@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { useRef } from "react";
 import Container from "../components/ui/Container";
-import SectionLabel from "../components/ui/SectionLabel";
 import heroBg from "../assets/images/exporting01.jpg";
 
 const services = [

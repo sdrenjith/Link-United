@@ -18,8 +18,8 @@ const variants: Record<Variant, string> = {
   filled:
     "rounded-lg px-7 py-3.5 text-sm bg-gradient-to-r from-gold-200 via-gold-400 to-gold-500 text-dark-600 hover:shadow-[0_0_40px_rgba(201,151,58,0.4)] hover:brightness-110",
   ghost:
-    "rounded-lg px-7 py-3.5 text-sm border border-gold-400/40 text-gold-200 hover:bg-gold-400/10 hover:border-gold-400/70 hover:shadow-[0_0_25px_rgba(201,151,58,0.15)]",
-  link: "text-sm text-gold-200 hover:text-gold-100 underline-offset-4 hover:underline",
+    "rounded-lg px-7 py-3.5 text-sm border border-gold-400/40 hover:bg-gold-400/10 hover:border-gold-400/70 hover:shadow-[0_0_25px_rgba(201,151,58,0.15)]",
+  link: "text-sm underline-offset-4 hover:underline hover:opacity-90",
 };
 
 export default function GoldButton({
@@ -42,7 +42,14 @@ export default function GoldButton({
       {variant === "ghost" && (
         <span className="pointer-events-none absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-gold-400/10 to-transparent" />
       )}
-      <span className="relative z-10">{children}</span>
+      <span
+        className={cn(
+          "relative z-10",
+          (variant === "ghost" || variant === "link") && "gold-text",
+        )}
+      >
+        {children}
+      </span>
     </motion.button>
   );
 }

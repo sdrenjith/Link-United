@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Hero from "../components/home/Hero";
-import Marquee from "../components/ui/Marquee";
+import AnnouncementsTicker from "../components/ui/AnnouncementsTicker";
 import CompanyIntro from "../components/home/CompanyIntro";
 import ServicesPreview from "../components/home/ServicesPreview";
 import ProductCategories from "../components/home/ProductCategories";
@@ -11,14 +11,14 @@ import ScrollToTop from "../components/ui/ScrollToTop";
 import SpiceParticles from "../components/ui/SpiceParticles";
 import api from "../services/http";
 
-const fallbackMarqueeItems = [
+const fallbackAnnouncements = [
   { id: "1", title: "Global Shipping", description: "Seamless sea and air freight across all major global trade routes.", imageUrl: "" },
   { id: "2", title: "Quality Assured", description: "100% rigorous quality control across every product category we handle.", imageUrl: "" },
   { id: "3", title: "Trusted Worldwide", description: "Partner networks established in over 50 countries operating 24/7.", imageUrl: "" },
 ];
 
 export default function Home() {
-  const [announcements, setAnnouncements] = useState<any[]>(fallbackMarqueeItems);
+  const [announcements, setAnnouncements] = useState<any[]>(fallbackAnnouncements);
 
   useEffect(() => {
     api.get("/announcements")
@@ -40,7 +40,7 @@ export default function Home() {
       </div>
 
       <div className="relative z-[70] rounded-b-[40px] md:rounded-b-[64px] bg-[#080808] shadow-[0_20px_60px_rgba(0,0,0,0.8)]">
-        <Marquee items={announcements} />
+        <AnnouncementsTicker items={announcements} />
         <CompanyIntro />
       </div>
 

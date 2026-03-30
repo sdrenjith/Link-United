@@ -7,6 +7,7 @@ import ScrollReveal from "../../components/ui/ScrollReveal";
 import GoldButton from "../../components/ui/GoldButton";
 import { productsService } from "../../services/products.service";
 import type { Product } from "../../types/api";
+import { useScrollToProductHash } from "../../hooks/useScrollToProductHash";
 
 const features = [
   "Certified Fabric Standards",
@@ -18,6 +19,7 @@ const features = [
 ];
 
 export default function KidsClothing() {
+  useScrollToProductHash();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [activeSubCategory, setActiveSubCategory] = useState<string | null>(null);
@@ -44,7 +46,7 @@ export default function KidsClothing() {
     <>
       <PageHero
         eyebrow="Product Category"
-        title="Kids Clothing"
+        title="Kids wear"
         description="Quality children's apparel for international retail markets."
       />
 
@@ -73,19 +75,19 @@ export default function KidsClothing() {
             <button
               className={`rounded border px-4 py-1.5 text-xs transition-all duration-300 ${
                 activeSubCategory === null
-                  ? "border-gold-400/50 bg-gold-400/10 text-gold-300"
+                  ? "border-gold-400/50 bg-gold-400/10 gold-text"
                   : "border-zinc-800 bg-zinc-950 text-zinc-400 hover:border-zinc-600 hover:text-zinc-200"
               }`}
               onClick={() => setActiveSubCategory(null)}
             >
-              All Kids Clothing
+              All kids wear
             </button>
             {kidsSubCategories.map((sub) => (
               <button
                 key={sub}
                 className={`rounded border px-4 py-1.5 text-xs transition-all duration-300 ${
                   activeSubCategory === sub
-                    ? "border-gold-400/50 bg-gold-400/10 text-gold-300"
+                    ? "border-gold-400/50 bg-gold-400/10 gold-text"
                     : "border-zinc-800 bg-zinc-950 text-zinc-400 hover:border-zinc-600 hover:text-zinc-200"
                 }`}
                 onClick={() => setActiveSubCategory(sub)}
@@ -105,6 +107,7 @@ export default function KidsClothing() {
             <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {displayedProducts.map((product, i) => (
                 <motion.div
+                  id={`product-${product.id}`}
                   key={product.id}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -128,7 +131,7 @@ export default function KidsClothing() {
 
           <div className="mt-16 text-center">
             <Link to="/contact">
-              <GoldButton>Enquire About Kids Clothing</GoldButton>
+              <GoldButton>Enquire about kids wear</GoldButton>
             </Link>
           </div>
         </Container>

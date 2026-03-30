@@ -20,4 +20,8 @@ export const authService = {
     const { data } = await api.get<{ user: User }>("/auth/me");
     return data.user;
   },
+  changePassword: async (payload: { currentPassword: string; newPassword: string }) => {
+    const { data } = await api.post<{ message: string }>("/dashboard/change-password", payload);
+    return data;
+  },
 };

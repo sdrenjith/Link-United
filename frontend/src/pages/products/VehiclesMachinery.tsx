@@ -7,6 +7,7 @@ import ScrollReveal from "../../components/ui/ScrollReveal";
 import GoldButton from "../../components/ui/GoldButton";
 import { productsService } from "../../services/products.service";
 import type { Product } from "../../types/api";
+import { useScrollToProductHash } from "../../hooks/useScrollToProductHash";
 
 const categories = [
   "Construction Equipment",
@@ -18,6 +19,7 @@ const categories = [
 ];
 
 export default function VehiclesMachinery() {
+  useScrollToProductHash();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -38,7 +40,7 @@ export default function VehiclesMachinery() {
     <>
       <PageHero
         eyebrow="Product Category"
-        title="Vehicles & Machinery"
+        title="Vehicle & machinery"
         description="Heavy equipment, vehicles, and industrial machinery for global markets."
       />
 
@@ -72,6 +74,7 @@ export default function VehiclesMachinery() {
             <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {products.map((product, i) => (
                 <motion.div
+                  id={`product-${product.id}`}
                   key={product.id}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -95,7 +98,7 @@ export default function VehiclesMachinery() {
 
           <div className="mt-16 text-center">
             <Link to="/contact">
-              <GoldButton>Enquire About Vehicles &amp; Machinery</GoldButton>
+              <GoldButton>Enquire about vehicle &amp; machinery</GoldButton>
             </Link>
           </div>
         </Container>

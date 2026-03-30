@@ -37,6 +37,20 @@ html {
   scroll-behavior: smooth;
 }
 
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201, 151, 58, 0.35) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(201, 151, 58, 0.35);
+  border-radius: 9999px;
+}
+
 html, body {
   overflow-x: clip;
   overflow-y: auto;
@@ -128,13 +142,13 @@ body {
 
 /* ─── Existing animations ─── */
 
-@keyframes marquee {
+@keyframes announcements-ticker {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
 
-.animate-marquee {
-  animation: marquee 30s linear infinite;
+.animate-announcements-ticker {
+  animation: announcements-ticker 36s linear infinite;
 }
 
 @keyframes shimmer {
@@ -291,7 +305,7 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-marquee,
+  .animate-announcements-ticker,
   .animate-shimmer,
   .animate-float,
   .animate-scroll-indicator,

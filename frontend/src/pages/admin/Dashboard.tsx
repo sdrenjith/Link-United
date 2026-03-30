@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
@@ -10,7 +10,7 @@ const navItems = [
     icon: "M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z",
     subItems: [
       { label: "Hero Slider", path: "/admin/dashboard/home-sliders" },
-      { label: "Notifications", path: "/admin/dashboard/announcements" },
+      { label: "Announcements", path: "/admin/dashboard/announcements" },
     ]
   },
   { 
@@ -22,6 +22,7 @@ const navItems = [
     ]
   },
   { label: "Media", path: "/admin/dashboard/media", icon: "M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" },
+  { label: "Change password", path: "/admin/dashboard/change-password", icon: "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" },
   { label: "Enquiries", path: "/admin/dashboard/enquiries", icon: "M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" },
 ];
 
@@ -37,34 +38,76 @@ function Dashboard() {
     Products: isProductsActive,
     Home: isHomeActive
   });
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [location.pathname]);
 
   const toggleMenu = (label: string) => {
     setOpenMenus(prev => ({ ...prev, [label]: !prev[label] }));
   };
 
   return (
-    <div className="flex h-screen w-full bg-[#030303] overflow-hidden selection:bg-gold-500/30">
-      
+    <div className="flex h-[100dvh] w-full bg-[#030303] overflow-hidden selection:bg-gold-500/30">
+      <header className="fixed inset-x-0 top-0 z-50 flex h-[7.25rem] shrink-0 items-center justify-between border-b border-white/10 bg-[#030303]/90 px-4 sm:h-32 sm:px-5 backdrop-blur-xl lg:hidden">
+        <button
+          type="button"
+          aria-expanded={sidebarOpen}
+          aria-controls="admin-sidebar"
+          aria-label={sidebarOpen ? "Close menu" : "Open menu"}
+          onClick={() => setSidebarOpen((o) => !o)}
+          className="flex h-10 w-10 items-center justify-center rounded-lg text-zinc-200 hover:bg-white/10"
+        >
+          {sidebarOpen ? (
+            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          ) : (
+            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          )}
+        </button>
+        <img
+          src="/logo.png"
+          alt="Link United International"
+          className="h-24 w-auto max-w-[min(340px,78vw)] object-contain opacity-90 sm:h-28 sm:max-w-[min(380px,84vw)]"
+          style={{ filter: "drop-shadow(0 0 8px rgba(201,151,58,0.25))" }}
+        />
+        <span className="w-10" aria-hidden />
+      </header>
+
+      {sidebarOpen && (
+        <button
+          type="button"
+          aria-label="Close menu"
+          className="fixed inset-0 z-20 bg-black/60 backdrop-blur-sm lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sleek Glassmorphic Sidebar */}
-      <aside className="w-[260px] lg:w-[280px] h-full flex flex-col border-r border-white/5 bg-white/[0.01] backdrop-blur-2xl relative z-20">
-        
-        {/* Top Branding Area */}
-        <div className="p-6 border-b border-white/5">
+      <aside
+        id="admin-sidebar"
+        className={`fixed inset-y-0 left-0 z-40 flex h-full w-[min(288px,88vw)] flex-col border-r border-white/5 bg-white/[0.01] backdrop-blur-2xl transition-transform duration-300 ease-out lg:static lg:z-20 lg:w-[280px] lg:translate-x-0 ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        {/* Logo only on desktop; mobile uses the fixed header logo */}
+        <div className="hidden border-b border-white/5 lg:block lg:p-7">
           <div className="flex items-center">
             <img
               src="/logo.png"
               alt="Link United International"
-              className="h-16 w-auto"
+              className="h-36 w-auto min-w-0"
               style={{ filter: "drop-shadow(0 0 10px rgba(201,151,58,0.35))" }}
             />
           </div>
-          <p className="mt-2 font-sans text-[9px] uppercase tracking-[0.2em] text-zinc-500">
-            Admin Console
-          </p>
         </div>
 
-        {/* User Context */}
-        <div className="px-6 py-5">
+        {/* User Context — top padding on mobile clears fixed header + extra gap above profile */}
+        <div className="border-b border-white/5 px-6 pt-[8.75rem] pb-5 sm:pt-[9.5rem] sm:pb-5 lg:border-b-0 lg:px-6 lg:py-5">
           <div className="flex items-center gap-3">
             <div className="h-9 w-9 rounded-full bg-gold-400/10 border border-gold-400/20 flex items-center justify-center">
               <span className="text-gold-400 text-sm font-semibold">
@@ -185,8 +228,8 @@ function Dashboard() {
       </aside>
 
       {/* Main Full-Viewport Content Area */}
-      <main className="flex-1 h-full overflow-y-auto relative z-10">
-        <div className="min-h-full p-8 md:p-12 w-full max-w-[1600px] mx-auto">
+      <main className="relative z-10 flex h-full min-w-0 flex-1 flex-col overflow-y-auto pt-[7.25rem] sm:pt-32 lg:pt-0">
+        <div className="mx-auto min-h-full w-full max-w-[1600px] px-4 py-6 sm:px-6 sm:py-8 md:p-10 lg:p-12">
           <Outlet />
         </div>
       </main>

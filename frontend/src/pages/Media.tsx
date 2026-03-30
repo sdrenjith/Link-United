@@ -1,9 +1,129 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Container from "../components/ui/Container";
 import { mediaService } from "../services/media.service";
 import type { MediaPost } from "../types/api";
 import heroBg from "../assets/images/exporting02.jpg";
+
+const NARROW_MQ = "(max-width: 1023px)";
+
+function useTapFlipMode() {
+  const [narrow, setNarrow] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia(NARROW_MQ);
+    const sync = () => setNarrow(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+  return narrow;
+}
+
+function MediaGalleryCard({ post, index }: { post: MediaPost; index: number }) {
+  const tapMode = useTapFlipMode();
+  const [flipped, setFlipped] = useState(false);
+
+  const toggleFlip = useCallback(() => {
+    if (tapMode) setFlipped((f) => !f);
+  }, [tapMode]);
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (!tapMode) return;
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setFlipped((f) => !f);
+    }
+  };
+
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.65, delay: index * 0.08 }}
+      className={`group relative h-[min(520px,85vw)] w-full max-w-md mx-auto outline-none [perspective:1400px] touch-manipulation md:max-w-none
+        ${tapMode ? "cursor-pointer" : "lg:cursor-default"}`}
+      tabIndex={0}
+      role="button"
+      aria-pressed={tapMode ? flipped : undefined}
+      aria-label={
+        tapMode
+          ? flipped
+            ? `${post.title}. Tap anywhere to return to the cover.`
+            : `${post.title}. Tap anywhere to read the full description.`
+          : `${post.title}. Hover to read full description.`
+      }
+      onClick={tapMode ? toggleFlip : undefined}
+      onKeyDown={onKeyDown}
+    >
+      <div
+        style={
+          tapMode
+            ? { transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }
+            : undefined
+        }
+        className={`relative h-full w-full transition-transform duration-700 ease-[cubic-bezier(0.33,1,0.68,1)] [transform-style:preserve-3d]
+          ${tapMode ? "" : "group-hover:[transform:rotateY(180deg)] group-focus-within:[transform:rotateY(180deg)]"}`}
+      >
+        {/* —— Front: full-bleed image + title only (summary & body on flip) —— */}
+        <div className="absolute inset-0 overflow-hidden rounded-2xl border border-white/12 bg-zinc-950 shadow-[0_24px_60px_rgba(0,0,0,0.55)] [backface-visibility:hidden]">
+          <img
+            src={post.imageUrl}
+            alt=""
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div
+            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/50 to-zinc-950/10"
+            aria-hidden
+          />
+          <div className="absolute inset-x-0 bottom-0 flex flex-col gap-2 p-5 sm:p-6 sm:gap-2.5">
+            <h3 className="font-body text-xl font-semibold leading-snug tracking-tight text-white line-clamp-3 drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] sm:text-2xl">
+              {post.title}
+            </h3>
+            <p className="font-body text-[10px] font-medium uppercase tracking-[0.2em] text-zinc-400/90 lg:hidden">
+              Tap for details
+            </p>
+            <p className="hidden font-body text-[10px] font-medium uppercase tracking-[0.2em] text-zinc-400/90 lg:block">
+              Hover for details
+            </p>
+          </div>
+        </div>
+
+        {/* —— Back: blurred image + readable content —— */}
+        <div className="absolute inset-0 overflow-hidden rounded-2xl border border-white/12 bg-zinc-950 [backface-visibility:hidden] [transform:rotateY(180deg)]">
+          <img
+            src={post.imageUrl}
+            alt=""
+            aria-hidden
+            className="pointer-events-none absolute inset-0 h-full w-full scale-110 object-cover opacity-45 blur-2xl"
+          />
+          <div className="absolute inset-0 bg-zinc-950/88 backdrop-blur-md" />
+          <div className="relative flex h-full min-h-0 flex-col p-6 sm:p-7">
+            <h3 className="shrink-0 font-body text-lg font-semibold leading-snug tracking-tight text-white sm:text-xl">
+              {post.title}
+            </h3>
+            {post.summary?.trim() ? (
+              <p className="mt-3 shrink-0 font-body text-sm leading-relaxed text-zinc-400 sm:mt-4 sm:text-[15px] sm:leading-relaxed">
+                {post.summary}
+              </p>
+            ) : null}
+            <div className="mt-5 min-h-0 flex-1 overflow-y-auto overscroll-contain border-t border-white/[0.08] pt-5 font-body text-base leading-[1.85] text-zinc-100 sm:mt-6 sm:pt-6 sm:text-lg sm:leading-[1.9] [scrollbar-color:rgba(201,151,58,0.35)_transparent] [scrollbar-width:thin] [-webkit-overflow-scrolling:touch]">
+              <p className="whitespace-pre-wrap break-words">
+                {post.content?.trim() ? post.content : "No additional description for this item."}
+              </p>
+            </div>
+            {tapMode ? (
+              <p className="mt-3 shrink-0 text-center font-body text-[10px] uppercase tracking-wider text-zinc-500 sm:text-xs">
+                Tap anywhere to flip back
+              </p>
+            ) : null}
+          </div>
+        </div>
+      </div>
+    </motion.article>
+  );
+}
 
 export default function Media() {
   const [posts, setPosts] = useState<MediaPost[]>([]);
@@ -98,52 +218,9 @@ export default function Media() {
             </motion.div>
           )}
 
-          <div className="grid gap-y-20 gap-x-12 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-8 sm:gap-10 md:grid-cols-2 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-12">
             {posts.map((post, i) => (
-              <motion.article
-                key={post.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, delay: i * 0.15 }}
-                className="group relative flex flex-col cursor-pointer"
-              >
-                {/* Clean, sharply defined image container without neon glowing shadows */}
-                <div className="overflow-hidden mb-8 aspect-[4/3] w-full bg-[#080808] border border-white/5">
-                  <img
-                    src={post.imageUrl}
-                    alt={post.title}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105 opacity-80 group-hover:opacity-100 mix-blend-luminosity group-hover:mix-blend-normal"
-                  />
-                </div>
-                
-                {/* Premium typography block */}
-                <div className="flex flex-col flex-1 pl-2 border-l border-gold-400/0 group-hover:border-gold-400/100 transition-colors duration-500">
-                  <p className="text-gold-400 text-xs font-bold uppercase tracking-[0.25em] mb-4">
-                    {new Date(post.publishedAt).toLocaleDateString("en-GB", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </p>
-                  
-                  <h3 className="text-2xl font-light text-white mb-5 leading-[1.3] tracking-tight group-hover:text-gold-400 transition-colors duration-300">
-                    {post.title}
-                  </h3>
-                  
-                  <p className="text-zinc-400 font-body text-sm leading-[1.8] mb-8 line-clamp-3">
-                    {post.summary}
-                  </p>
-                  
-                  {/* Elegant interacting link element */}
-                  <div className="mt-auto">
-                    <span className="text-xs font-bold uppercase tracking-[0.2em] text-white flex items-center gap-4 group-hover:gap-6 transition-all duration-300">
-                      Read Article <div className="h-[1px] w-8 bg-gold-400" />
-                    </span>
-                  </div>
-                </div>
-              </motion.article>
+              <MediaGalleryCard key={post.id} post={post} index={i} />
             ))}
           </div>
           

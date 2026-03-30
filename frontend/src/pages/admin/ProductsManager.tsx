@@ -132,7 +132,7 @@ function ProductsManager() {
           ))}
         </select>
 
-        {/* Conditional Sub-Category Dropdown for Agro and Kids Clothing */}
+        {/* Conditional sub-category dropdown for agro and kids wear */}
         {(form.category === "agro-commodities" || form.category === "kids-clothing") && (
           <select 
             className="rounded border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm md:col-span-2" 

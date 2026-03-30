@@ -7,6 +7,7 @@ import ScrollReveal from "../../components/ui/ScrollReveal";
 import GoldButton from "../../components/ui/GoldButton";
 import { productsService } from "../../services/products.service";
 import type { Product } from "../../types/api";
+import { useScrollToProductHash } from "../../hooks/useScrollToProductHash";
 
 const commodities = [
   "Cashews", "Rice", "Spices", "Indian Masalas", "Vanilla", "Cocoa",
@@ -15,6 +16,7 @@ const commodities = [
 ];
 
 export default function AgroCommodities() {
+  useScrollToProductHash();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -35,7 +37,7 @@ export default function AgroCommodities() {
     <>
       <PageHero
         eyebrow="Product Category"
-        title="Agro Commodities"
+        title="Agro products"
         description="Spices, grains, oils, and agricultural raw materials sourced globally."
       />
 
@@ -72,6 +74,7 @@ export default function AgroCommodities() {
             <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {products.map((product, i) => (
                 <motion.div
+                  id={`product-${product.id}`}
                   key={product.id}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -95,7 +98,7 @@ export default function AgroCommodities() {
 
           <div className="mt-16 text-center">
             <Link to="/contact">
-              <GoldButton>Enquire About Agro Commodities</GoldButton>
+              <GoldButton>Enquire about agro products</GoldButton>
             </Link>
           </div>
         </Container>
